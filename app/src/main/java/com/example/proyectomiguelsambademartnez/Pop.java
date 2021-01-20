@@ -41,7 +41,7 @@ public class Pop extends AppCompatDialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String pass = password.getText().toString();
                         String site = Site.getText().toString();
-                        listener.applyText(site, pass);
+                        listener.applyText(pass, site);
                     }
                 });
         Site = view.findViewById(R.id.editTextSite);
@@ -64,6 +64,6 @@ public class Pop extends AppCompatDialogFragment {
     }
 
     public interface PopListener {
-        void applyText(String Site, String pass);
+        void applyText(String pass, String site);
     }
 }

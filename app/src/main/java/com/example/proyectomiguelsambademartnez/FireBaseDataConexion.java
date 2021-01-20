@@ -5,11 +5,15 @@ import com.google.firebase.database.FirebaseDatabase;
 
 
 //Esta clase se ocupará de realizar todas las conexiones con Firebase.
-public class FireBaseDataBase {
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference myRef = database.getReference("message");
+public class FireBaseDataConexion {
+    FirebaseDatabase database;
 
-    public void writeFire(){
+    FireBaseDataConexion(FirebaseDatabase database){
+        this.database=database;
+    }
+
+    public void writeFire(contraseñasUser us){
+        DatabaseReference myRef = database.getReference("message");
         myRef.setValue("Hello, World!");
 
     }

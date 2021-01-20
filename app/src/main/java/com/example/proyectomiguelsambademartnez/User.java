@@ -5,8 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 //Se trata de la clase que utiliza el usuario básico.
-public class User implements Serializable {
-    @SerializedName("EmailOrUser") protected String email, UserID;
+public class User implements Serializable{
+    protected String email;
+    protected String UserID;
 
 
     User(String id, String email) {

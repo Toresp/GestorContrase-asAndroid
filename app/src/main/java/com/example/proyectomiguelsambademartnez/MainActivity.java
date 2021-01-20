@@ -38,16 +38,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inicio_sesion);
         mAuth = FirebaseAuth.getInstance();
+        copiarBD();
+        this.user = new UserDataBase(this);
         pulsarBoton();
         pulsarTexto();
 
     }
 
-        /*
-        copiarBD();
-        this.user = new UserDataBase(this);
 
-         */
 
     @Override
     public void onStart() {
@@ -65,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "La BD no se va a copiar. Ya existe", Toast.LENGTH_LONG).show();
             return; // Ya existe la BD, salimos del método
         }
-
-
         String pathbd = "/data/data/" + getPackageName()
                 + "/databases/";
         File filepathdb = new File(pathbd);

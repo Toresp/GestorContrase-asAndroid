@@ -10,23 +10,25 @@ import android.util.Log;
 import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
+import java.util.List;
+
 
 //Maneja los datos recogidos e introducidos en la base de datos local.
 public class UserDataBase {
     private Context context;
-    private AppBaseDatos appbd;
+    private static AppBaseDatos appbd;
 
     UserDataBase(Context context){
         this.context=context;
         appbd = new AppBaseDatos(this.context);
 
     }
-
+//Recoge todos los datos de el usuario desde la base de datos local.
     @RequiresApi(api = Build.VERSION_CODES.O)
     public contraseñasUser getDatos(String uid,String email) {
         User resultado = new User(uid,email);
-        ArrayList <PassData> Datos = new ArrayList<>();
-        String consulta = "SELECT password,page,creation_date FROM UPASS WHERE uid=? AND user_email=?";
+        List<PassData> Datos = new ArrayList<>();
+        String consulta = "SELECT password,page,creation_date FROM UPASS WHERE uid=?";
         contraseñasUser resultadoF = null;
         String[] param = {resultado.UserID,resultado.email};
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
@@ -35,13 +37,11 @@ public class UserDataBase {
         Log.d("DEPURACIÓN", "Nº filas: " + cursor.getCount());
             if(cursor.moveToFirst()){
                 do{
-                    Datos.add(new PassData(cursor.getString(2),cursor.getString(3),cursor.getString(4)));
+                    Datos.add(new PassData(cursor.getString(1),cursor.getString(2),cursor.getString(3)));
                 }while(cursor.moveToNext());
             }resultadoF = new contraseñasUser(resultado,Datos);
             sqlLiteDB.close();
             return resultadoF;
-
-
         }
 
 
@@ -53,13 +53,12 @@ public class UserDataBase {
         }
         Log.d("DEPURACIÓN", texto);
     }
-
-    public Boolean AñadirContraseña(String Uid,String email,String pass, String site, String date){
+//Añade una contraseña a la base de datos local
+    public Boolean AñadirContraseña(String id,String pass, String site, String date){
         long result;
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("uid",Uid);
-        values.put("user_email",email);
+        values.put("uid",id);
         values.put("password",pass);
         values.put("page",site);
         values.put("creation_date",date);
@@ -69,11 +68,11 @@ public class UserDataBase {
             return false;
         return true;
     }
-
-    public Boolean Existe(String login){
+//Comprueba la existencia en la base de datos local de el id de el usuario y de la pagina vinculada
+    public static Boolean Existe(String id,String page){
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
-        String[] param = {login};
-        String consulta = "SELECT * FROM Usuarios WHERE usuario=?";
+        String[] param = {id,page};
+        String consulta = "SELECT * FROM UPASS WHERE uid=? AND page=?";
         Cursor cursor = sqlLiteDB.rawQuery(consulta, param);
         if(cursor.moveToFirst()){
             appbd.close();

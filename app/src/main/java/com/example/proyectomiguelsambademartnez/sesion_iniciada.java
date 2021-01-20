@@ -14,6 +14,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -24,13 +25,17 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     UserDataBase bd;
     LinearLayout Botones;
     TextView Iniciado;
+    FireBaseDataConexion Data;
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sesion_iniciada);
         usuario = (contraseñasUser) getIntent().getSerializableExtra(MainActivity.OBJETO);
+        Data = new FireBaseDataConexion(FirebaseDatabase.getInstance());
+
         this.bd = new UserDataBase(this);
         Iniciado = findViewById(R.id.iniciado);
         Iniciado.setText("Contraseñas de " + usuario.email);
@@ -53,6 +58,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     }
 
     //Se generan todos los botones y textbox de acuerdo al numero de contraseñas existentes
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void CargarContraseñas() {
         if (usuario.getContraseñas().size() > 0) {
             Botones.removeAllViews();
@@ -102,14 +108,15 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void applyText(String site, String pass) {
-        if (bd.AñadirContraseña(usuario.getEmail(), site, pass)) {
+    public void applyText(String pass, String site) {
+        String date=LocalDate.now().format(DateTimeFormatter.ofPattern("YY-MM-DD"));
+        if(!UserDataBase.Existe(usuario.UserID,site)){
+        if (bd.AñadirContraseña(usuario.UserID,pass, site,date)){
             usuario.addContraseña(pass, site,LocalDate.now().format(DateTimeFormatter.ofPattern("YY-MM-DD")));
             Toast.makeText(getApplicationContext(), "Pagina añadida", Toast.LENGTH_SHORT).show();
-        } else
+        }else
             Toast.makeText(getApplicationContext(), "Error Inesperado", Toast.LENGTH_SHORT).show();
         CargarContraseñas();
-
-
+        }else Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
     }
 }

@@ -4,25 +4,29 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
-public class PassData {
-    private String userID;
-    private long dataID;//Se trata de un dato autoincremental.
-    private String localizacion;
-    private String password;
-    private LocalDate fechaCambio;
+@RequiresApi(api = Build.VERSION_CODES.O)
+public class PassData implements Serializable {
+    @SerializedName("password") private String password;
+    @SerializedName("page") private String localizacion;
+    @SerializedName("creation_date") private String fechaCambio;
 
 
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
     PassData(String pass, String local, String fech) {
         password = pass;
         localizacion = local;
-        fechaCambio = LocalDate.parse(fech, DateTimeFormatter.ofPattern("YY-MM-DD"));
-
+        LocalDate fecha= LocalDate.parse(fech, DateTimeFormatter.ofPattern("YY-MM-DD"));
+        fechaCambio=fecha.toString();
     }
+
+
 
     public String getLocalizacion() {
         return localizacion;
@@ -32,7 +36,7 @@ public class PassData {
         return password;
     }
 
-    public LocalDate getFechaCambio() {
+    public String getFechaCambio() {
         return fechaCambio;
     }
 }

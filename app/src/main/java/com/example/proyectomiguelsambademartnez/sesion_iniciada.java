@@ -16,13 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 
 public class sesion_iniciada extends AppCompatActivity implements Pop.PopListener  {
-    contraseñasUser usuario;
-    UserDataBase bd;
+    UserData usuario;
+    DataBaseConexion bd;
     LinearLayout Botones;
     TextView Iniciado;
     FireBaseDataConexion Data;
@@ -33,10 +33,10 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sesion_iniciada);
-        usuario = (contraseñasUser) getIntent().getSerializableExtra(MainActivity.OBJETO);
+        usuario = (UserData) getIntent().getSerializableExtra(MainActivity.OBJETO);
         Data = new FireBaseDataConexion(FirebaseDatabase.getInstance());
 
-        this.bd = new UserDataBase(this);
+        this.bd = new DataBaseConexion(this);
         Iniciado = findViewById(R.id.iniciado);
         Iniciado.setText("Contraseñas de " + usuario.email);
         Botones = (LinearLayout) findViewById(R.id.Botones);
@@ -69,7 +69,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                 btnHide.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
                 txt.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                txt.setText(((PassData)usuario.getContraseñas().get(i)).getLocalizacion());
+                txt.setText(((PassData)usuario.getContraseñas().get(i)).getPage());
                 txt.setTextColor(Color.parseColor("#FFFFFF"));
                 btn.setText("**************");
                 btnHide.setOnClickListener(new View.OnClickListener() {
@@ -109,11 +109,13 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void applyText(String pass, String site) {
-        String date=LocalDate.now().format(DateTimeFormatter.ofPattern("YY-MM-DD"));
-        if(!UserDataBase.Existe(usuario.UserID,site)){
+        String date= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        if(!DataBaseConexion.Existe(usuario.UserID,site)){
         if (bd.AñadirContraseña(usuario.UserID,pass, site,date)){
-            usuario.addContraseña(pass, site,LocalDate.now().format(DateTimeFormatter.ofPattern("YY-MM-DD")));
-            Toast.makeText(getApplicationContext(), "Pagina añadida", Toast.LENGTH_SHORT).show();
+            usuario.addContraseña(pass, site,date);
+            if(Data.writeFire(usuario))
+                Toast.makeText(getApplicationContext(), "Pagina añadida", Toast.LENGTH_SHORT).show();
+            else Toast.makeText(getApplicationContext(), "La Página no se pudo añadir a la base de datos en Nube", Toast.LENGTH_SHORT).show();
         }else
             Toast.makeText(getApplicationContext(), "Error Inesperado", Toast.LENGTH_SHORT).show();
         CargarContraseñas();

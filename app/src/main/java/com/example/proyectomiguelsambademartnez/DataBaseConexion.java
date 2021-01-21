@@ -4,43 +4,45 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Build;
 import android.util.Log;
-
-import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 //Maneja los datos recogidos e introducidos en la base de datos local.
-public class UserDataBase {
+public class DataBaseConexion {
     private Context context;
     private static AppBaseDatos appbd;
 
-    UserDataBase(Context context){
+    DataBaseConexion(Context context){
         this.context=context;
         appbd = new AppBaseDatos(this.context);
 
     }
 //Recoge todos los datos de el usuario desde la base de datos local.
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public contraseñasUser getDatos(String uid,String email) {
+    //Se necesita debuggear no adquiere datos
+    public UserData getDatos(String uid, String email) {
         User resultado = new User(uid,email);
         List<PassData> Datos = new ArrayList<>();
-        String consulta = "SELECT password,page,creation_date FROM UPASS WHERE uid=?";
-        contraseñasUser resultadoF = null;
-        String[] param = {resultado.UserID,resultado.email};
-        SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
-        Cursor cursor = sqlLiteDB.rawQuery(consulta, param);
-        this.depuracion(consulta, param);
-        Log.d("DEPURACIÓN", "Nº filas: " + cursor.getCount());
-            if(cursor.moveToFirst()){
-                do{
-                    Datos.add(new PassData(cursor.getString(1),cursor.getString(2),cursor.getString(3)));
-                }while(cursor.moveToNext());
-            }resultadoF = new contraseñasUser(resultado,Datos);
+        String consulta = "SELECT page,password,creation_date FROM UPASS WHERE uid=?";
+        UserData resultadoF = null;
+        String[] param = {resultado.UserID};
+        try {
+            SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+            Cursor cursor = sqlLiteDB.rawQuery(consulta, param);
+            this.depuracion(consulta, param);
+            Log.d("DEPURACIÓN", "Nº filas: " + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    Datos.add(new PassData(cursor.getString(1), cursor.getString(0), cursor.getString(2)));
+                } while (cursor.moveToNext());
+            }
             sqlLiteDB.close();
+        }catch(Exception Ex){
+
+        }
+            resultadoF = new UserData(resultado, Datos);
             return resultadoF;
         }
 
@@ -58,11 +60,11 @@ public class UserDataBase {
         long result;
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("uid",id);
-        values.put("password",pass);
         values.put("page",site);
+        values.put("password",pass);
         values.put("creation_date",date);
-        result = sqlLiteDB.insertWithOnConflict("contraseñas", null, values,SQLiteDatabase.CONFLICT_REPLACE);
+        values.put("uid",id);
+        result = sqlLiteDB.insert("UPASS", null, values);
         sqlLiteDB.close();
         if (result == -1)
             return false;
@@ -81,13 +83,15 @@ public class UserDataBase {
         return false;
     }
 
-    public Boolean CrearUsuario(String nomUser,String pass){
+
+
+    public Boolean CrearUsuario(String id,String email){
         long result;
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("usuario",nomUser);
-        values.put("contraseña",pass);
-        result = sqlLiteDB.insert("Usuarios", null, values);
+        values.put("uid",id);
+        values.put("email",email);
+        result = sqlLiteDB.insert("USERS", null, values);
         sqlLiteDB.close();
         if (result == -1)
             return false;

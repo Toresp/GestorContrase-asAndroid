@@ -3,7 +3,6 @@ package com.example.proyectomiguelsambademartnez;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
 
 import android.content.Intent;
 import android.os.Build;
@@ -30,16 +29,16 @@ import java.io.OutputStream;
 public class MainActivity extends AppCompatActivity {
     public final static String OBJETO = "contraseñaUser";
     public final static String BD = "UserDataB";
-    UserDataBase user;
+    DataBaseConexion user;
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.inicio_sesion);
-        mAuth = FirebaseAuth.getInstance();
         copiarBD();
-        this.user = new UserDataBase(this);
+        mAuth = FirebaseAuth.getInstance();
+        this.user = new DataBaseConexion(this);
         pulsarBoton();
         pulsarTexto();
 
@@ -47,11 +46,20 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
     @Override
     public void onStart() {
         super.onStart();
+        try{
+            FirebaseAuth.getInstance().signOut();
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        update(currentUser);
+
+        }catch (Exception ex){
+
+        }
+
     }
 
     private void copiarBD() {
@@ -160,8 +168,10 @@ public class MainActivity extends AppCompatActivity {
          */
     }
     public void update(FirebaseUser user){
-
-        startActivity(new Intent(this, sesion_iniciada.class));
+        UserData usr = this.user.getDatos(user.getUid(),user.getEmail());
+        Intent intent = new Intent(this, sesion_iniciada.class);
+        intent.putExtra(this.OBJETO,usr);
+        startActivity(intent);
     }
 
 }

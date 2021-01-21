@@ -23,7 +23,7 @@ public class CrearUsuario extends AppCompatActivity {
     EditText pass;
     EditText pass2;
     TextView volver;
-    UserDataBase bd;
+    DataBaseConexion bd;
     private FirebaseAuth mAuth;
 
 
@@ -32,7 +32,7 @@ public class CrearUsuario extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.crearusuario);
         mAuth = FirebaseAuth.getInstance();
-        bd = new UserDataBase(this);
+        bd = new DataBaseConexion(this);
         volver = findViewById(R.id.volverInicio);
         user = findViewById(R.id.editTextUser);
         pass = findViewById(R.id.editTextPassword);
@@ -71,8 +71,9 @@ public class CrearUsuario extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d("DEPURACION", "createUserWithEmail:success");
-                            Toast.makeText(CrearUsuario.this, "Usuario Creado con exito.",
-                                    Toast.LENGTH_SHORT).show();
+                            if(bd.CrearUsuario(mAuth.getUid(), Datos[0]))
+                                Toast.makeText(CrearUsuario.this, "Usuario Creado con exito.",
+                                        Toast.LENGTH_SHORT).show();
                             Update();
 
                         } else {

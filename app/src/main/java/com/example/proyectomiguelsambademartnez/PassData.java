@@ -1,43 +1,36 @@
 package com.example.proyectomiguelsambademartnez;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
-import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
 
-@RequiresApi(api = Build.VERSION_CODES.O)
+
+
 public class PassData implements Serializable {
     @SerializedName("password") private String password;
-    @SerializedName("page") private String localizacion;
-    @SerializedName("creation_date") private String fechaCambio;
+    @SerializedName("page") private String page;
+    @SerializedName("creation_date") private String creation_date;
 
 
     PassData(String pass, String local, String fech) {
         password = pass;
-        localizacion = local;
-        LocalDate fecha= LocalDate.parse(fech, DateTimeFormatter.ofPattern("YY-MM-DD"));
-        fechaCambio=fecha.toString();
+        page = local;
+        creation_date =fech;
     }
 
 
 
-    public String getLocalizacion() {
-        return localizacion;
+    public String getPage() {
+        return page;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public String getFechaCambio() {
-        return fechaCambio;
+    public String getCreation_date() {
+        return creation_date;
     }
 }
+
 

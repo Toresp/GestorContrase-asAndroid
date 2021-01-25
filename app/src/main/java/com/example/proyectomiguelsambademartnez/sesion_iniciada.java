@@ -1,6 +1,8 @@
 package com.example.proyectomiguelsambademartnez;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 public class sesion_iniciada extends AppCompatActivity implements Pop.PopListener  {
@@ -110,15 +113,50 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     @Override
     public void applyText(String pass, String site) {
         String date= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        if(!DataBaseConexion.Existe(usuario.UserID,site)){
+        if(!bd.ExistPage(usuario.UserID,site)){
         if (bd.AñadirContraseña(usuario.UserID,pass, site,date)){
             usuario.addContraseña(pass, site,date);
-            if(Data.writeFire(usuario))
-                Toast.makeText(getApplicationContext(), "Pagina añadida", Toast.LENGTH_SHORT).show();
-            else Toast.makeText(getApplicationContext(), "La Página no se pudo añadir a la base de datos en Nube", Toast.LENGTH_SHORT).show();
+            Data.writeFire(usuario);
+
         }else
             Toast.makeText(getApplicationContext(), "Error Inesperado", Toast.LENGTH_SHORT).show();
         CargarContraseñas();
         }else Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
     }
+
+    public void actualizarDatos(){
+        Data.ReadFire(usuario.UserID);
+    }
+
+    private void checkUserData(){
+        if(!usuario.getContraseñas().equals(Data.ReadFire(usuario.UserID))){
+            List<PassData> datos = Data.ReadFire(usuario.UserID);
+            if(usuario.getContraseñas().size()>datos.size() ||usuario.getContraseñas().size()<datos.size()){
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                //Se usan los datos locales y los datos en la nube serán actualizados.
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                //Se usan los datos en la nube y los locales serán atualizados.
+                                break;
+                        }
+                    }
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Los datos en la nube son distintos a los locales, cuales desea utilizar?").setPositiveButton("Datos Locales", dialogClickListener)
+                        .setNegativeButton("Datos de la nube", dialogClickListener).show();
+            }
+
+        }
+
+    }
+
+
 }
+
+

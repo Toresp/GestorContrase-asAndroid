@@ -29,8 +29,9 @@ import java.io.OutputStream;
 public class MainActivity extends AppCompatActivity {
     public final static String OBJETO = "contraseñaUser";
     public final static String BD = "UserDataB";
-    DataBaseConexion user;
+    DataBaseConexion bd;
     private FirebaseAuth mAuth;
+    FireBaseDataConexion Data;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.inicio_sesion);
         copiarBD();
         mAuth = FirebaseAuth.getInstance();
-        this.user = new DataBaseConexion(this);
+        this.bd = new DataBaseConexion(this);
         pulsarBoton();
         pulsarTexto();
 
@@ -147,28 +148,23 @@ public class MainActivity extends AppCompatActivity {
                         // ...
                     }
                 });
-        //contraseñasUser usr =user.getUsuario(usuario, password);
-        /*
+     }
 
-        if (usr != null) {
-            Log.d("DEPURACIÓN", "Nombre usr: "+ usr.getNombre());
-            Toast.makeText(getApplicationContext(), "Iniciando sesión.", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, sesion_iniciada.class);
-            intent.putExtra(this.OBJETO, usr);
-            startActivity(intent);
-            finish();
-        } else {
-            //Toast.makeText(getApplicationContext(), "Error de autentificación.", Toast.LENGTH_LONG).show();
-            Mensajes d= new Mensajes();
-            d.setCancelable(false);
-            FragmentManager fm= this.getSupportFragmentManager();
-            d.show(fm,"errorLogin");
-        }
-
-         */
-    }
     public void update(FirebaseUser user){
-        UserData usr = this.user.getDatos(user.getUid(),user.getEmail());
+        UserData usr;
+        String id= user.getUid();
+        String email = user.getEmail();
+        //Si no existe el usuario de forma local, crea el usuario en la base de datos local y
+        // pone todos los datos de la nube en la base de datos local
+        if(!bd.ExistUser(id)) {
+            Toast.makeText(MainActivity.this, "Datos locales de el usuario no existentes buscando en la nube.", Toast.LENGTH_SHORT).show();
+            bd.CrearUsuario(id, email);
+            if (bd.AñadirContraseña(Data.ReadFire(id), id))
+                Toast.makeText(MainActivity.this, "Datos de la nube almacenados correctamente.", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(MainActivity.this, "Fallo al almacenar uno mas datos de la nube.", Toast.LENGTH_SHORT).show();
+        }
+        usr = this.bd.getDatos(user.getUid(),user.getEmail());
         Intent intent = new Intent(this, sesion_iniciada.class);
         intent.putExtra(this.OBJETO,usr);
         startActivity(intent);

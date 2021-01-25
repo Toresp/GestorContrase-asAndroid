@@ -21,7 +21,6 @@ public class DataBaseConexion {
 
     }
 //Recoge todos los datos de el usuario desde la base de datos local.
-    //Se necesita debuggear no adquiere datos
     public UserData getDatos(String uid, String email) {
         User resultado = new User(uid,email);
         List<PassData> Datos = new ArrayList<>();
@@ -70,11 +69,43 @@ public class DataBaseConexion {
             return false;
         return true;
     }
+    public Boolean AñadirContraseña(List<PassData> data, String id){
+        long result=0;
+        for (int i=0; i < data.size();i++) {
+            SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("page", data.get(i).getPage());
+            values.put("password", data.get(i).getPassword());
+            values.put("creation_date", data.get(i).getCreation_date());
+            values.put("uid", id);
+            if (result==-1)
+                sqlLiteDB.insert("UPASS", null, values);
+            else
+                result = sqlLiteDB.insert("UPASS", null, values);
+            sqlLiteDB.close();
+        }
+        if (result == -1)
+            return false;
+        return true;
+    }
+
 //Comprueba la existencia en la base de datos local de el id de el usuario y de la pagina vinculada
-    public static Boolean Existe(String id,String page){
+    public  Boolean ExistPage(String id, String page){
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
         String[] param = {id,page};
         String consulta = "SELECT * FROM UPASS WHERE uid=? AND page=?";
+        Cursor cursor = sqlLiteDB.rawQuery(consulta, param);
+        if(cursor.moveToFirst()){
+            appbd.close();
+            return true;
+        }
+        return false;
+    }
+
+    public Boolean ExistUser(String id){
+        SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+        String[] param = {id};
+        String consulta = "SELECT * FROM UPASS WHERE uid=?";
         Cursor cursor = sqlLiteDB.rawQuery(consulta, param);
         if(cursor.moveToFirst()){
             appbd.close();

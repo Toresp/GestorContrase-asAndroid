@@ -26,17 +26,14 @@ public class UserData extends User {
         Contraseñas.add(new PassData(contraseña,localizacion,fechaCambio));
     }
 
-    public static String getGson(List<PassData> lista) throws IOException {
-      new Gson().toJson(lista,new FileWriter("C:\\Users\\migue\\Desktop\\ProyectoAndroid"));
-        return "va";
-    }
 
     public List getContraseñas() {
         return this.Contraseñas;
     }
 
-
-
+    public void setContraseñas(List<PassData> contraseñas) {
+        Contraseñas = contraseñas;
+    }
 
 }
 

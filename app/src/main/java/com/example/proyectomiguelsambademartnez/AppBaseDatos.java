@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import java.io.Serializable;
 
 public class AppBaseDatos extends SQLiteOpenHelper  {
-    public final static String NOME_BD = "localdata.db";
+    public final static String NOME_BD = "localdata2.db";
     public final static int VERSION_BD = 1;
 
     public AppBaseDatos (Context context) {

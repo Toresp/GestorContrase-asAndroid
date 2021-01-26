@@ -69,6 +69,7 @@ public class DataBaseConexion {
             return false;
         return true;
     }
+
     public Boolean AñadirContraseña(List<PassData> data, String id){
         long result=0;
         for (int i=0; i < data.size();i++) {

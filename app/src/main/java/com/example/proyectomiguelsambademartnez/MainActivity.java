@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onStart() {
         super.onStart();
@@ -142,16 +144,15 @@ public class MainActivity extends AppCompatActivity {
                             Log.w("DEPURACION", "signInWithEmail:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Autenticacion fallida.",
                                     Toast.LENGTH_SHORT).show();
-                            // ...
-                        }
 
-                        // ...
+                        }
                     }
                 });
      }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void update(FirebaseUser user){
-        UserData usr;
+        UserData usr ;
         String id= user.getUid();
         String email = user.getEmail();
         //Si no existe el usuario de forma local, crea el usuario en la base de datos local y
@@ -159,12 +160,11 @@ public class MainActivity extends AppCompatActivity {
         if(!bd.ExistUser(id)) {
             Toast.makeText(MainActivity.this, "Datos locales de el usuario no existentes buscando en la nube.", Toast.LENGTH_SHORT).show();
             bd.CrearUsuario(id, email);
-            if (bd.AñadirContraseña(Data.ReadFire(id), id))
-                Toast.makeText(MainActivity.this, "Datos de la nube almacenados correctamente.", Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(MainActivity.this, "Fallo al almacenar uno mas datos de la nube.", Toast.LENGTH_SHORT).show();
+            Data= new FireBaseDataConexion(FirebaseDatabase.getInstance());
+            Data.SyncFire(id,bd);
+            Data.writeUltimaAct(id);
         }
-        usr = this.bd.getDatos(user.getUid(),user.getEmail());
+        usr = this.bd.getDatos(id,email);
         Intent intent = new Intent(this, sesion_iniciada.class);
         intent.putExtra(this.OBJETO,usr);
         startActivity(intent);

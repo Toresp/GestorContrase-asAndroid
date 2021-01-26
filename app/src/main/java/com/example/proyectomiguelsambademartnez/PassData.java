@@ -11,14 +11,13 @@ public class PassData implements Serializable {
     @SerializedName("page") private String page;
     @SerializedName("creation_date") private String creation_date;
 
+    PassData() {}
 
     PassData(String pass, String pagina, String fech) {
         password = pass;
         page = pagina;
         creation_date =fech;
     }
-
-
 
     public String getPage() {
         return page;

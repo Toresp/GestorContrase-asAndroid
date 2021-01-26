@@ -1,12 +1,21 @@
 package com.example.proyectomiguelsambademartnez;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -14,6 +23,7 @@ import java.util.List;
 public class FireBaseDataConexion {
     FirebaseDatabase database;
     private DatabaseReference myRef;
+    private List<PassData> Datos;
 
     FireBaseDataConexion(FirebaseDatabase database){
         this.database=database;
@@ -23,10 +33,28 @@ public class FireBaseDataConexion {
         myRef  = database.getReference();
         myRef.child(us.UserID).child("contraseñas").setValue(us.getContraseñas());
     }
-    public List<PassData> ReadFire(String id){
-        List<PassData> Datos;
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void writeUltimaAct(String id){
         myRef = database.getReference();
-        Datos = (List<PassData>) myRef.child(id).child("contraseñas").get();
-        return Datos;
+        myRef.child(id).child("ultima_conexion").setValue(LocalDateTime.now().toString());
+    }
+    public void SyncFire(String id, DataBaseConexion bd){
+
+        myRef = database.getReference(id+"/contraseñas");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                final Iterable<DataSnapshot> children = snapshot.getChildren();
+                for (DataSnapshot d : children) {
+                    Datos.add(d.getValue(PassData.class));
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        bd.AñadirContraseña(Datos,id);
     }
 }

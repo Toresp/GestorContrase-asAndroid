@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
-public class sesion_iniciada extends AppCompatActivity implements Pop.PopListener  {
+public class sesion_iniciada extends AppCompatActivity implements Pop.PopListener {
     UserData usuario;
     DataBaseConexion bd;
     LinearLayout Botones;
@@ -54,10 +54,11 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
 
 
     }
-//Se crea un dialogo para introducir los datos al añadir una contraseña
+
+    //Se crea un dialogo para introducir los datos al añadir una contraseña
     private void openDialog() {
         Pop DialogPop = new Pop();
-        DialogPop.show(getSupportFragmentManager(),"Dialogo Contraseñas");
+        DialogPop.show(getSupportFragmentManager(), "Dialogo Contraseñas");
     }
 
     //Se generan todos los botones y textbox de acuerdo al numero de contraseñas existentes
@@ -68,11 +69,11 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
             for (int i = 0; i < usuario.getContraseñas().size(); i++) {
                 final Button btn = new Button(this.getBaseContext());
                 TextView txt = new TextView(this.getBaseContext());
-                final HideButton btnHide = new HideButton(this.getBaseContext(),((PassData)usuario.getContraseñas().get(i)).getPassword());
+                final HideButton btnHide = new HideButton(this.getBaseContext(), ((PassData) usuario.getContraseñas().get(i)).getPassword());
                 btnHide.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
                 txt.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                txt.setText(((PassData)usuario.getContraseñas().get(i)).getPage());
+                txt.setText(((PassData) usuario.getContraseñas().get(i)).getPage());
                 txt.setTextColor(Color.parseColor("#FFFFFF"));
                 btn.setText("**************");
                 btnHide.setOnClickListener(new View.OnClickListener() {
@@ -112,51 +113,32 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void applyText(String pass, String site) {
-        String date= LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        if(!bd.ExistPage(usuario.UserID,site)){
-        if (bd.AñadirContraseña(usuario.UserID,pass, site,date)){
-            usuario.addContraseña(pass, site,date);
-            Data.writeFire(usuario);
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        if (!bd.ExistPage(usuario.UserID, site)) {
+            if (bd.AñadirContraseña(usuario.UserID, pass, site, date)) {
+                usuario.addContraseña(pass, site, date);
+                Data.writeFire(usuario);
 
-        }else
-            Toast.makeText(getApplicationContext(), "Error Inesperado", Toast.LENGTH_SHORT).show();
-        CargarContraseñas();
-        }else Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
+            } else
+                Toast.makeText(getApplicationContext(), "Error Inesperado", Toast.LENGTH_SHORT).show();
+            CargarContraseñas();
+        } else
+            Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
     }
 
-    public void actualizarDatos(){
-        Data.ReadFire(usuario.UserID);
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void actualizarDatos() {
+        Data.SyncFire(usuario.UserID,bd);
+        Data.writeUltimaAct(usuario.UserID);
     }
 
-    private void checkUserData(){
-        if(!usuario.getContraseñas().equals(Data.ReadFire(usuario.UserID))){
-            List<PassData> datos = Data.ReadFire(usuario.UserID);
-            if(usuario.getContraseñas().size()>datos.size() ||usuario.getContraseñas().size()<datos.size()){
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
-                                //Se usan los datos locales y los datos en la nube serán actualizados.
-                                break;
-
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                //Se usan los datos en la nube y los locales serán atualizados.
-                                break;
-                        }
-                    }
-                };
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Los datos en la nube son distintos a los locales, cuales desea utilizar?").setPositiveButton("Datos Locales", dialogClickListener)
-                        .setNegativeButton("Datos de la nube", dialogClickListener).show();
-            }
-
-        }
+    private void checkUserData() {
 
     }
-
 
 }
+
+
+
 
 

@@ -6,12 +6,17 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,11 +29,12 @@ import java.util.List;
 
 
 public class sesion_iniciada extends AppCompatActivity implements Pop.PopListener {
-    UserData usuario;
-    DataBaseConexion bd;
-    LinearLayout Botones;
-    TextView Iniciado;
-    FireBaseDataConexion Data;
+    private UserData usuario;
+    private DataBaseConexion bd;
+    private LinearLayout Botones;
+    private TextView Iniciado;
+    private FireBaseDataConexion Data;
+    private Boolean Añadir = false;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -47,6 +53,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         Add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Añadir=true;
                 openDialog();
             }
         });
@@ -58,7 +65,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     //Se crea un dialogo para introducir los datos al añadir una contraseña
     private void openDialog() {
         Pop DialogPop = new Pop();
-        DialogPop.show(getSupportFragmentManager(), "Dialogo Contraseñas");
+        DialogPop.show(getSupportFragmentManager(), "Añadir Contraseña");
     }
 
     //Se generan todos los botones y textbox de acuerdo al numero de contraseñas existentes
@@ -67,11 +74,16 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         if (usuario.getContraseñas().size() > 0) {
             Botones.removeAllViews();
             for (int i = 0; i < usuario.getContraseñas().size(); i++) {
+                LinearLayout l1 = new LinearLayout(this);
+                l1.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                l1.setOrientation(LinearLayout.HORIZONTAL);
+                final ImageButton menu = new ImageButton(this.getBaseContext());
                 final Button btn = new Button(this.getBaseContext());
                 TextView txt = new TextView(this.getBaseContext());
                 final HideButton btnHide = new HideButton(this.getBaseContext(), ((PassData) usuario.getContraseñas().get(i)).getPassword());
                 btnHide.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
-                txt.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                menu.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
+                txt.setLayoutParams(new LinearLayout.LayoutParams(331, LinearLayout.LayoutParams.WRAP_CONTENT));
                 btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 txt.setText(((PassData) usuario.getContraseñas().get(i)).getPage());
                 txt.setTextColor(Color.parseColor("#FFFFFF"));
@@ -84,6 +96,14 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                         else btn.setText(btnHide.pass);
                     }
                 });
+                menu.setBackgroundResource(R.drawable.android_options);
+                menu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showPopup(v);
+
+                    }
+                });
                 btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -91,8 +111,10 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                         Toast.makeText(getApplicationContext(), "Copiado al portapapeles!", Toast.LENGTH_SHORT).show();
                     }
                 });
-                Botones.addView(txt);
-                Botones.addView(btnHide);
+                l1.addView(txt);
+                l1.addView(btnHide);
+                l1.addView(menu);
+                Botones.addView(l1);
                 Botones.addView(btn);
             }
         }
@@ -114,16 +136,21 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     @Override
     public void applyText(String pass, String site) {
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        if (!bd.ExistPage(usuario.UserID, site)) {
-            if (bd.AñadirContraseña(usuario.UserID, pass, site, date)) {
-                usuario.addContraseña(pass, site, date);
-                Data.writeFire(usuario);
+        if(Añadir) {
+            if (!bd.ExistPage(usuario.UserID, site)) {
+                if (bd.AñadirContraseña(usuario.UserID, pass, site, date)) {
+                    usuario.addContraseña(pass, site, date);
+                    Data.writeFire(usuario);
 
+                } else
+                    Toast.makeText(getApplicationContext(), "Error Inesperado", Toast.LENGTH_SHORT).show();
+                CargarContraseñas();
             } else
-                Toast.makeText(getApplicationContext(), "Error Inesperado", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
+        }else{
+            usuario = bd.editDatos(usuario,site,new PassData(pass,site,date));
             CargarContraseñas();
-        } else
-            Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -132,9 +159,33 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         Data.writeUltimaAct(usuario.UserID);
     }
 
-    private void checkUserData() {
+    public void editOrDelete(){
 
     }
+
+
+    public void showPopup(View v) {
+        PopupMenu popup = new PopupMenu(this, v);
+        MenuInflater inflater = popup.getMenuInflater();
+        inflater.inflate(R.menu.editordel, popup.getMenu());
+        popup.show();
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+
+                return true;
+            case R.id.del:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+
 
 }
 

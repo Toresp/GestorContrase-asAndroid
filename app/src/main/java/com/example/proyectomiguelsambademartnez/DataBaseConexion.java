@@ -39,10 +39,31 @@ public class DataBaseConexion {
             }
             sqlLiteDB.close();
         }catch(Exception Ex){
-
+            Ex.printStackTrace();
         }
             resultadoF = new UserData(resultado, Datos);
             return resultadoF;
+        }
+
+        public UserData editDatos(UserData us, String page, PassData data){
+            String consulta = "UPDATE UPASS SET page = ? AND password = ? AND creation_date = ? WHERE uid=? AND page=? ";
+            String[] Param={data.getPage(),data.getPassword(),data.getCreation_date(),us.UserID,page};
+            try{
+                SQLiteDatabase db = appbd.getWritableDatabase();
+                db.rawQuery(consulta,Param);
+                db.close();
+                List pass = us.getContraseñas();
+                for (int i=0; i < pass.size();i++){
+                    if(pass.get(i).equals(new PassData("",page,""))){
+                        pass.set(i,data);
+                        us.setContraseñas(pass);
+                        return us;
+                    }
+                }
+            }catch(Exception Ex){
+                Ex.printStackTrace();
+            }
+            return us;
         }
 
 

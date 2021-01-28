@@ -7,6 +7,7 @@ import android.widget.Button;
 public class HideButton extends androidx.appcompat.widget.AppCompatButton {
     public String pass;
     public boolean hided;
+
     public HideButton(Context context, String p) {
         super(context);
         pass = p;

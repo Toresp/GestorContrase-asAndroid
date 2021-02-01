@@ -28,11 +28,12 @@ public class FireBaseDataConexion {
     FireBaseDataConexion(FirebaseDatabase database){
         this.database=database;
     }
-
+    //Los datos de el primer usuario se suben los de el segundo no.
     public void writeFire(UserData us) {
         myRef  = database.getReference();
         myRef.child(us.UserID).child("contraseñas").setValue(us.getContraseñas());
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void writeUltimaAct(String id){
         myRef = database.getReference();

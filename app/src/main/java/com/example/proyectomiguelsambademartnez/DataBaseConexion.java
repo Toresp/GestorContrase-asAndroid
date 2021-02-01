@@ -45,26 +45,33 @@ public class DataBaseConexion {
             return resultadoF;
         }
 
-        public UserData editDatos(UserData us, String page, PassData data){
+        public Boolean editDatos(UserData us, String page, PassData data){
             String consulta = "UPDATE UPASS SET page = ? AND password = ? AND creation_date = ? WHERE uid=? AND page=? ";
             String[] Param={data.getPage(),data.getPassword(),data.getCreation_date(),us.UserID,page};
+            try {
+                SQLiteDatabase db = appbd.getWritableDatabase();
+                db.rawQuery(consulta, Param);
+                db.close();
+                return true;
+            }catch(Exception Ex){
+                return false;
+            }
+        }
+
+        public Boolean DelDatos(String id, String page) {
+            String consulta = "DELETE FROM UPASS WHERE uid = ? AND page = ?";
+            String[] Param={id,page};
             try{
                 SQLiteDatabase db = appbd.getWritableDatabase();
-                db.rawQuery(consulta,Param);
+                db.rawQuery(consulta, Param);
                 db.close();
-                List pass = us.getContraseñas();
-                for (int i=0; i < pass.size();i++){
-                    if(pass.get(i).equals(new PassData("",page,""))){
-                        pass.set(i,data);
-                        us.setContraseñas(pass);
-                        return us;
-                    }
-                }
+                return true;
             }catch(Exception Ex){
-                Ex.printStackTrace();
+                return false;
             }
-            return us;
         }
+
+
 
 
 
@@ -127,7 +134,7 @@ public class DataBaseConexion {
     public Boolean ExistUser(String id){
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
         String[] param = {id};
-        String consulta = "SELECT * FROM UPASS WHERE uid=?";
+        String consulta = "SELECT * FROM USER WHERE uid=?";
         Cursor cursor = sqlLiteDB.rawQuery(consulta, param);
         if(cursor.moveToFirst()){
             appbd.close();
@@ -144,7 +151,7 @@ public class DataBaseConexion {
         ContentValues values = new ContentValues();
         values.put("uid",id);
         values.put("email",email);
-        result = sqlLiteDB.insert("USERS", null, values);
+        result = sqlLiteDB.insert("USER", null, values);
         sqlLiteDB.close();
         if (result == -1)
             return false;

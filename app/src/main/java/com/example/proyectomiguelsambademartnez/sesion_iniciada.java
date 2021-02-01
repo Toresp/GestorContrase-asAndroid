@@ -79,7 +79,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                 l1.setOrientation(LinearLayout.HORIZONTAL);
                 final ImageButton menu = new ImageButton(this.getBaseContext());
                 final Button btn = new Button(this.getBaseContext());
-                TextView txt = new TextView(this.getBaseContext());
+                final TextView txt = new TextView(this.getBaseContext());
                 final HideButton btnHide = new HideButton(this.getBaseContext(), ((PassData) usuario.getContraseñas().get(i)).getPassword());
                 btnHide.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
                 menu.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
@@ -100,7 +100,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                 menu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showPopup(v);
+                        showPopup(v, txt.getText().toString());
 
                     }
                 });
@@ -148,7 +148,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
             } else
                 Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
         }else{
-            usuario = bd.editDatos(usuario,site,new PassData(pass,site,date));
+            bd.editDatos(usuario,site,new PassData(pass,site,date));
             CargarContraseñas();
         }
     }
@@ -159,31 +159,43 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         Data.writeUltimaAct(usuario.UserID);
     }
 
-    public void editOrDelete(){
-
+    public void Delete(String txt) {
+        List pass = usuario.getContraseñas();
+        pass.remove(new PassData("", txt, ""));
+        usuario.setContraseñas(pass);
+        bd.DelDatos(usuario.UserID, txt);
     }
 
 
-    public void showPopup(View v) {
+    public void showPopup(View v,final String p) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.editordel, popup.getMenu());
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.edit:
+                        Añadir = false;
+                        Delete(p);
+                        
+                        actualizarDatos();
+                        return true;
+                    case R.id.del:
+                        Delete(p);
+                        actualizarDatos();
+                        CargarContraseñas();
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
         popup.show();
-
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.edit:
 
-                return true;
-            case R.id.del:
-                return true;
-            default:
-                return false;
-        }
-    }
 
 
 

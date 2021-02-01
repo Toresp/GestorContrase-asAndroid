@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
                 });
      }
 
+//Peta cuando el usuario nuevo no tiene datos en la nube.
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void update(FirebaseUser user){
         UserData usr ;

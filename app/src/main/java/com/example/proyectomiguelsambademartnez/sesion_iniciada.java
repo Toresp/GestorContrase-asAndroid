@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,8 +65,12 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
 
     //Se crea un dialogo para introducir los datos al añadir una contraseña
     private void openDialog() {
-        Pop DialogPop = new Pop();
+        Pop DialogPop = new Pop("Añadir contraseña");
         DialogPop.show(getSupportFragmentManager(), "Añadir Contraseña");
+    }
+    private void editDialog(String p, String pass){
+        Pop DialogPop = new Pop(p,"Editar contraseña",pass);
+        DialogPop.show(getSupportFragmentManager(), "Editar contaseña");
     }
 
     //Se generan todos los botones y textbox de acuerdo al numero de contraseñas existentes
@@ -75,15 +80,21 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
             Botones.removeAllViews();
             for (int i = 0; i < usuario.getContraseñas().size(); i++) {
                 LinearLayout l1 = new LinearLayout(this);
+                //El l2 encierra los botones que van alineados a la derecha
+                LinearLayout l2 = new LinearLayout(this);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    l2.setGravity(RelativeLayout.ALIGN_RIGHT);
                 l1.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 l1.setOrientation(LinearLayout.HORIZONTAL);
+                l2.setLayoutParams(layoutParams);
+                l2.setOrientation(LinearLayout.HORIZONTAL);
                 final ImageButton menu = new ImageButton(this.getBaseContext());
                 final Button btn = new Button(this.getBaseContext());
                 final TextView txt = new TextView(this.getBaseContext());
                 final HideButton btnHide = new HideButton(this.getBaseContext(), ((PassData) usuario.getContraseñas().get(i)).getPassword());
-                btnHide.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
-                menu.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
-                txt.setLayoutParams(new LinearLayout.LayoutParams(331, LinearLayout.LayoutParams.WRAP_CONTENT));
+                btnHide.setLayoutParams(new LinearLayout.LayoutParams(80,80));
+                menu.setLayoutParams(new LinearLayout.LayoutParams(80,80));
+                txt.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 txt.setText(((PassData) usuario.getContraseñas().get(i)).getPage());
                 txt.setTextColor(Color.parseColor("#FFFFFF"));
@@ -100,7 +111,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                 menu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showPopup(v, txt.getText().toString());
+                        showPopup(v, txt.getText().toString(),btnHide.pass);
 
                     }
                 });
@@ -112,8 +123,9 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                     }
                 });
                 l1.addView(txt);
-                l1.addView(btnHide);
-                l1.addView(menu);
+                l2.addView(btnHide);
+                l2.addView(menu);
+                l1.addView(l2);
                 Botones.addView(l1);
                 Botones.addView(btn);
             }
@@ -134,28 +146,32 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
-    public void applyText(String pass, String site) {
+    public void applyText(String pass, String site, String oldSite) {
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        PassData data = new PassData(pass,site,date);
         if(Añadir) {
             if (!bd.ExistPage(usuario.UserID, site)) {
-                if (bd.AñadirContraseña(usuario.UserID, pass, site, date)) {
+                if (bd.AñadirContraseña(usuario.UserID, data)) {
                     usuario.addContraseña(pass, site, date);
                     Data.writeFire(usuario);
-
                 } else
                     Toast.makeText(getApplicationContext(), "Error Inesperado", Toast.LENGTH_SHORT).show();
                 CargarContraseñas();
             } else
                 Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
         }else{
-            bd.editDatos(usuario,site,new PassData(pass,site,date));
-            CargarContraseñas();
+            if(!bd.editDatos(usuario,oldSite,new PassData(pass,site,date)))
+                Toast.makeText(getApplicationContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
+            else{
+                Edit(oldSite, data);
+                CargarContraseñas();
+                Data.writeFire(usuario);
+            }
         }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void actualizarDatos() {
-        Data.SyncFire(usuario.UserID,bd);
         Data.writeUltimaAct(usuario.UserID);
     }
 
@@ -165,9 +181,14 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         usuario.setContraseñas(pass);
         bd.DelDatos(usuario.UserID, txt);
     }
+    public void Edit(String oldSite, PassData data){
+        List pass = usuario.getContraseñas();
+        pass.set(pass.indexOf(new PassData("", oldSite, "")),data);
+        usuario.setContraseñas(pass);
+    }
 
 
-    public void showPopup(View v,final String p) {
+    public void showPopup(View v,final String p, final String pass) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.editordel, popup.getMenu());
@@ -178,14 +199,12 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                 switch (item.getItemId()) {
                     case R.id.edit:
                         Añadir = false;
-                        Delete(p);
-                        
-                        actualizarDatos();
+                        editDialog(p,pass);
                         return true;
                     case R.id.del:
                         Delete(p);
-                        actualizarDatos();
                         CargarContraseñas();
+                        Data.writeFire(usuario);
                         return true;
                     default:
                         return false;

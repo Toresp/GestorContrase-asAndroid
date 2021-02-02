@@ -19,6 +19,18 @@ public class Pop extends AppCompatDialogFragment {
     private EditText Site;
     private EditText password;
     private PopListener listener;
+    private String oldpage;
+    private String title;
+    private String pass;
+
+    Pop(String op, String t, String pa){
+        oldpage = op;
+        title=t;
+        pass=pa;
+    }
+    Pop(String t){
+        title=t;
+    }
 
 
 
@@ -29,7 +41,7 @@ public class Pop extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialogcustom,null);
         builder.setView(view)
-                .setTitle("Añadir Contraseña")
+                .setTitle(title)
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -41,11 +53,13 @@ public class Pop extends AppCompatDialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String pass = password.getText().toString();
                         String site = Site.getText().toString();
-                        listener.applyText(pass, site);
+                        listener.applyText(pass, site,oldpage);
                     }
                 });
         Site = view.findViewById(R.id.editTextSite);
         password = view.findViewById(R.id.editTextPass);
+        Site.setText(oldpage);
+        password.setText(pass);
         return builder.create();
 
 
@@ -64,6 +78,6 @@ public class Pop extends AppCompatDialogFragment {
     }
 
     public interface PopListener {
-        void applyText(String pass, String site);
+        void applyText(String pass, String site, String oldSite);
     }
 }

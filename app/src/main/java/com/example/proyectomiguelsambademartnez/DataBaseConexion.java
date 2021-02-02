@@ -45,27 +45,35 @@ public class DataBaseConexion {
             return resultadoF;
         }
 
-        public Boolean editDatos(UserData us, String page, PassData data){
-            String consulta = "UPDATE UPASS SET page = ? AND password = ? AND creation_date = ? WHERE uid=? AND page=? ";
-            String[] Param={data.getPage(),data.getPassword(),data.getCreation_date(),us.UserID,page};
+        public Boolean editDatos(UserData us, String oldpage, PassData data){
+            int result;
+            String consulta = "uid=? AND page=? ";
+            SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put("page",data.getPage());
+            values.put("password",data.getPassword());
+            values.put("creation_date",data.getPassword());
+            values.put("uid",us.UserID);
+            String[] Param={us.UserID, oldpage};
             try {
                 SQLiteDatabase db = appbd.getWritableDatabase();
-                db.rawQuery(consulta, Param);
+                result = db.update("UPASS", values,consulta,Param);
                 db.close();
-                return true;
+                return result!=-1;
             }catch(Exception Ex){
                 return false;
             }
         }
 
         public Boolean DelDatos(String id, String page) {
-            String consulta = "DELETE FROM UPASS WHERE uid = ? AND page = ?";
-            String[] Param={id,page};
+            int num;
+            String whereClause = "uid = ? AND page = ?";
+            String whereArgs[] = {id,page};
             try{
                 SQLiteDatabase db = appbd.getWritableDatabase();
-                db.rawQuery(consulta, Param);
+                num = db.delete("UPASS",whereClause,whereArgs);
                 db.close();
-                return true;
+                return num!=-1;
             }catch(Exception Ex){
                 return false;
             }
@@ -83,13 +91,13 @@ public class DataBaseConexion {
         Log.d("DEPURACIÓN", texto);
     }
 //Añade una contraseña a la base de datos local
-    public Boolean AñadirContraseña(String id,String pass, String site, String date){
+    public Boolean AñadirContraseña(String id,PassData data){
         long result;
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("page",site);
-        values.put("password",pass);
-        values.put("creation_date",date);
+        values.put("page",data.getPage());
+        values.put("password",data.getPassword());
+        values.put("creation_date",data.getCreation_date());
         values.put("uid",id);
         result = sqlLiteDB.insert("UPASS", null, values);
         sqlLiteDB.close();

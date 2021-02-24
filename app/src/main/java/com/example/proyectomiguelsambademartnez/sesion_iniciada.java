@@ -34,6 +34,8 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     private DataBaseConexion bd;
     private LinearLayout Botones;
     private TextView Iniciado;
+    private Button Actualizar;
+    private FloatingActionButton Add;
     private FireBaseDataConexion Data;
     private Boolean Añadir = false;
 
@@ -45,12 +47,19 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         setContentView(R.layout.sesion_iniciada);
         usuario = (UserData) getIntent().getSerializableExtra(MainActivity.OBJETO);
         Data = new FireBaseDataConexion(FirebaseDatabase.getInstance());
+        Actualizar = findViewById(R.id.button);
+        Actualizar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actualizarDatos();
+            }
+        });
 
         this.bd = new DataBaseConexion(this);
         Iniciado = findViewById(R.id.iniciado);
         Iniciado.setText("Contraseñas de " + usuario.email);
         Botones = (LinearLayout) findViewById(R.id.Botones);
-        FloatingActionButton Add = findViewById(R.id.Añadir);
+        Add = findViewById(R.id.Añadir);
         Add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,8 +68,6 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
             }
         });
         CargarContraseñas();
-
-
     }
 
     //Se crea un dialogo para introducir los datos al añadir una contraseña
@@ -172,7 +179,9 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void actualizarDatos() {
+        Data.SyncFire(usuario.UserID,bd);
         Data.writeUltimaAct(usuario.UserID);
+        CargarContraseñas();
     }
 
     public void Delete(String txt) {
@@ -186,7 +195,6 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         pass.set(pass.indexOf(new PassData("", oldSite, "")),data);
         usuario.setContraseñas(pass);
     }
-
 
     public void showPopup(View v,final String p, final String pass) {
         PopupMenu popup = new PopupMenu(this, v);
@@ -213,7 +221,6 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         });
         popup.show();
     }
-
 
 
 

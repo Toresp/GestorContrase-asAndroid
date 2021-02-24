@@ -160,10 +160,11 @@ public class MainActivity extends AppCompatActivity {
         // pone todos los datos de la nube en la base de datos local
         if(!bd.ExistUser(id)) {
             Toast.makeText(MainActivity.this, "Datos locales de el usuario no existentes buscando en la nube.", Toast.LENGTH_SHORT).show();
-            bd.CrearUsuario(id, email);
             Data= new FireBaseDataConexion(FirebaseDatabase.getInstance());
+            bd.CrearUsuario(id, email);
             Data.SyncFire(id,bd);
             Data.writeUltimaAct(id);
+
         }
         usr = this.bd.getDatos(id,email);
         Intent intent = new Intent(this, sesion_iniciada.class);

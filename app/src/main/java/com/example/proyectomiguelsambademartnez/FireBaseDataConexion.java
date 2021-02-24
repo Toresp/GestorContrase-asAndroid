@@ -39,16 +39,20 @@ public class FireBaseDataConexion {
         myRef = database.getReference();
         myRef.child(id).child("ultima_conexion").setValue(LocalDateTime.now().toString());
     }
-    public void SyncFire(String id, DataBaseConexion bd){
+    public void SyncFire(final String id, final DataBaseConexion bd){
 
         myRef = database.getReference(id+"/contraseñas");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                final Iterable<DataSnapshot> children = snapshot.getChildren();
-                for (DataSnapshot d : children) {
-                    Datos.add(d.getValue(PassData.class));
+                Datos = new ArrayList();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    PassData data = dataSnapshot.getValue(PassData.class);
+                     Datos.add(data);
+
+
                 }
+                bd.AñadirContraseña(Datos,id);
             }
 
             @Override
@@ -56,6 +60,6 @@ public class FireBaseDataConexion {
 
             }
         });
-        bd.AñadirContraseña(Datos,id);
+
     }
 }

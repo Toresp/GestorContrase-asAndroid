@@ -19,6 +19,26 @@ public class PassData implements Serializable {
         creation_date =fech;
     }
 
+    public static PassData encriptPassData(PassData D){
+        try{
+            return new PassData(DataProtect.encryptPass(D.password,DataProtect.generateKey(D.password)).toString(),D.page,D.creation_date);
+
+        }catch(Exception Ex){
+            return D;
+        }
+    }
+
+    public static PassData decryptPassData(PassData D){
+        try{
+            //Probablemente mal
+            return new PassData(DataProtect.decryptPass(D.password.getBytes(),DataProtect.generateKey(D.password)),D.page,D.creation_date);
+
+
+        }catch(Exception Ex){
+            return D;
+        }
+    }
+
     public String getPage() {
         return page;
     }

@@ -153,9 +153,11 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
+    //La variable oldpage se usa solo en caso de que se editen los datos.
     public void applyText(String pass, String site, String oldSite) {
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        PassData data = new PassData(pass,site,date);
+        //Se encripta la contraseña antes de ser añadida.
+        PassData data = PassData.encriptPassData(new PassData(pass,site,date));
         if(Añadir) {
             if (!bd.ExistPage(usuario.UserID, site)) {
                 if (bd.AñadirContraseña(usuario.UserID, data)) {
@@ -167,10 +169,10 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
             } else
                 Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
         }else{
-            if(!bd.editDatos(usuario,oldSite,new PassData(pass,site,date)))
+            if(!bd.editDatos(usuario,oldSite,data))
                 Toast.makeText(getApplicationContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
             else{
-                Edit(oldSite, data);
+                Edit(oldSite, new PassData(pass, site, date));
                 CargarContraseñas();
                 Data.writeFire(usuario);
             }

@@ -115,10 +115,7 @@ public class DataBaseConexion {
             values.put("password", data.get(i).getPassword());
             values.put("creation_date", data.get(i).getCreation_date());
             values.put("uid", id);
-            if (result==-1)
-                sqlLiteDB.insert("UPASS", null, values);
-            else
-                result = sqlLiteDB.insert("UPASS", null, values);
+            result = sqlLiteDB.insert("UPASS", null, values);
             sqlLiteDB.close();
         }
         if (result == -1)

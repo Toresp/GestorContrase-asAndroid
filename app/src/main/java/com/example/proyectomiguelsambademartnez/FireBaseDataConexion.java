@@ -23,7 +23,6 @@ import java.util.List;
 public class FireBaseDataConexion {
     FirebaseDatabase database;
     private DatabaseReference myRef;
-    private List<PassData> Datos;
 
     FireBaseDataConexion(FirebaseDatabase database){
         this.database=database;
@@ -31,7 +30,7 @@ public class FireBaseDataConexion {
     //Los datos de el primer usuario se suben los de el segundo no.
     public void writeFire(UserData us) {
         myRef  = database.getReference();
-        myRef.child(us.UserID).child("contraseñas").setValue(us.getContraseñas());
+        myRef.child(us.UserID).child("contraseñas").setValue(us.encryptContraseñas());
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -45,12 +44,10 @@ public class FireBaseDataConexion {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Datos = new ArrayList();
+               List<PassData> Datos = new ArrayList();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     PassData data = dataSnapshot.getValue(PassData.class);
                      Datos.add(data);
-
-
                 }
                 bd.AñadirContraseña(Datos,id);
             }

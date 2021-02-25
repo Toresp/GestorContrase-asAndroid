@@ -53,6 +53,7 @@ public class Pop extends AppCompatDialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         String pass = password.getText().toString();
                         String site = Site.getText().toString();
+                        //La variable oldpage se usa solo en caso de que se editen los datos.
                         listener.applyText(pass, site,oldpage);
                     }
                 });

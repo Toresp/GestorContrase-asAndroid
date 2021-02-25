@@ -16,8 +16,11 @@ public class UserData extends User {
 
     
 //Se crea un usuario de contraseñas a partir de un usuario
-    UserData(User us, List contraseñas) {
+    UserData(User us, List<PassData> contraseñas) {
         super(us.UserID, us.email);
+        for(int i = 0; i < contraseñas.size();i++){
+            contraseñas.set(i,PassData.decryptPassData(contraseñas.get(i)));
+        }
         this.Contraseñas = contraseñas;
     }
 
@@ -25,6 +28,16 @@ public class UserData extends User {
     public void addContraseña(String contraseña, String localizacion, String fechaCambio){
         Contraseñas.add(new PassData(contraseña,localizacion,fechaCambio));
     }
+
+    public List<PassData> encryptContraseñas(){
+        List<PassData> Datos = new ArrayList();
+        for(int i = 0; i < Contraseñas.size();i++){
+            String pass = Contraseñas.get(i).getPassword();
+            Datos.add(PassData.encriptPassData(Contraseñas.get(i)));
+        }
+        return Datos;
+    }
+
 
 
     public List getContraseñas() {

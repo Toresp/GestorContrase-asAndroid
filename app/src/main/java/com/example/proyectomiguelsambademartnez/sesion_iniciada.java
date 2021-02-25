@@ -157,7 +157,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     public void applyText(String pass, String site, String oldSite) {
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         //Se encripta la contraseña antes de ser añadida.
-        PassData data = PassData.encriptPassData(new PassData(pass,site,date));
+        PassData data = PassData.encriptPassData(new PassData(pass,site,date),usuario.UserID);
         if(Añadir) {
             if (!bd.ExistPage(usuario.UserID, site)) {
                 if (bd.AñadirContraseña(usuario.UserID, data)) {

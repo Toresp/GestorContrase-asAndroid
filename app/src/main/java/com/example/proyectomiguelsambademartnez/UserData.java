@@ -19,7 +19,7 @@ public class UserData extends User {
     UserData(User us, List<PassData> contraseñas) {
         super(us.UserID, us.email);
         for(int i = 0; i < contraseñas.size();i++){
-            contraseñas.set(i,PassData.decryptPassData(contraseñas.get(i)));
+            contraseñas.set(i,PassData.decryptPassData(contraseñas.get(i),us.UserID));
         }
         this.Contraseñas = contraseñas;
     }
@@ -33,7 +33,7 @@ public class UserData extends User {
         List<PassData> Datos = new ArrayList();
         for(int i = 0; i < Contraseñas.size();i++){
             String pass = Contraseñas.get(i).getPassword();
-            Datos.add(PassData.encriptPassData(Contraseñas.get(i)));
+            Datos.add(PassData.encriptPassData(Contraseñas.get(i),UserID));
         }
         return Datos;
     }

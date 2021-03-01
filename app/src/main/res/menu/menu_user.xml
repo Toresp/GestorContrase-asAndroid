@@ -7,4 +7,7 @@
     <item
         android:id="@+id/signout"
         android:title="Cerrar Sesión" />
+    <item
+        android:id="@+id/signin"
+        android:title="Crear Usuario" />
 </menu>

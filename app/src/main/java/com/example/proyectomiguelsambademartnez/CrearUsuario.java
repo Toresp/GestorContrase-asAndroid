@@ -19,12 +19,14 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class CrearUsuario extends AppCompatActivity {
-    EditText user;
-    EditText pass;
-    EditText pass2;
-    TextView volver;
-    DataBaseConexion bd;
+    private EditText user;
+    private EditText pass;
+    private EditText pass2;
+    private TextView volver;
+    private DataBaseConexion bd;
     private FirebaseAuth mAuth;
+    private Boolean CreatedFrom;
+    private Button send;
 
 
     @Override
@@ -37,22 +39,42 @@ public class CrearUsuario extends AppCompatActivity {
         user = findViewById(R.id.editTextUser);
         pass = findViewById(R.id.editTextPassword);
         pass2 = findViewById(R.id.editTextPassword2);
-        Button send = new Button(this);
         send = findViewById(R.id.Send);
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Comprobaciones();
+        //Averigua si la activity fue lanzada desde la pantalla de inicio de sesión o la pantalla de anónimo.
+        try{
+            CreatedFrom = (Boolean) getIntent().getSerializableExtra(sesion_anonima.Launched);
 
-            }
-        });
-        volver.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Update();
-            }
-        });
-
+        }catch (Exception Ex){
+            CreatedFrom = false;
+        }
+        if(!CreatedFrom) {
+            send.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Comprobaciones();
+                }
+            });
+            volver.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Update();
+                }
+            });
+        }else{
+            volver.setText("Volver a la sesión anonima");
+            send.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ComprobarYActualizar();
+                }
+            });
+            volver.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    goBack();
+                }
+            });
+        }
 
 
     }
@@ -63,21 +85,19 @@ public class CrearUsuario extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Uno o mas campos vacios, rellene todos los campos", Toast.LENGTH_SHORT).show();
         else {
             if (Datos[1].equals(Datos[2])) {
-                //Comprobar con Firebase la existencia de el usuario!!!!!!.
 
                 mAuth.createUserWithEmailAndPassword(Datos[0], Datos[1]).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            // Creado usuario correctamente.
                             Log.d("DEPURACION", "createUserWithEmail:success");
                             if(bd.CrearUsuario(mAuth.getUid(), Datos[0]))
                                 Toast.makeText(CrearUsuario.this, "Usuario Creado con exito.",
                                         Toast.LENGTH_SHORT).show();
                             Update();
-
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // Fallo al crear usuario.
                             Log.w("DEPURACION", "createUserWithEmail:failure", task.getException());
                             Toast.makeText(CrearUsuario.this, "No se ha podido crear el usuario.",
                                     Toast.LENGTH_SHORT).show();
@@ -92,21 +112,43 @@ public class CrearUsuario extends AppCompatActivity {
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
+
+
+
+    private void goBack(){
+        startActivity(new Intent(this, sesion_anonima.class));
+        finish();
+    }
+
+    private void ComprobarYActualizar() {
+        final String[] Datos = new String[]{user.getText().toString(), pass.getText().toString(), pass2.getText().toString()};
+        if (TextUtils.isEmpty(Datos[0]) || TextUtils.isEmpty(Datos[1]) || TextUtils.isEmpty(Datos[2]))
+            Toast.makeText(getApplicationContext(), "Uno o mas campos vacios, rellene todos los campos", Toast.LENGTH_SHORT).show();
+        else {
+            if (Datos[1].equals(Datos[2])) {
+                mAuth.createUserWithEmailAndPassword(Datos[0], Datos[1]).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Creado usuario correctamente.
+                            Log.d("DEPURACION", "createUserWithEmail:success");
+                            if(bd.EditUser(mAuth.getUid(), Datos[0]))
+                                Toast.makeText(CrearUsuario.this, "Usuario Creado con exito.",
+                                        Toast.LENGTH_SHORT).show();
+                            Update();
+
+                        } else {
+                            // Fallo al crear usuario.
+                            Log.w("DEPURACION", "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(CrearUsuario.this, "No se ha podido crear el usuario.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        }
+    }
 }
-
-                /*
-                if (Datos[1].equals(Datos[2])) {
-                    if (bd.CrearUsuario(Datos[0], Datos[1])) {
-                        Toast.makeText(getApplicationContext(), "Usuario añadido a la base de datos, Volviendo a la pantalla anterior...", Toast.LENGTH_SHORT).show();
-
-                        startActivity(new Intent(this, MainActivity.class));
-                        finish();
-                    } else
-                        Toast.makeText(getApplicationContext(), "Ha ocurrido un Error inesperado!", Toast.LENGTH_SHORT).show();
-
-                }else Toast.makeText(getApplicationContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
-
-                 */
 
 
 

@@ -28,11 +28,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 public class MainActivity extends AppCompatActivity {
-    public final static String OBJETO = "contraseñaUser";
+    public final static String OBJETO = "UserData";
     public final static String BD = "UserDataB";
-    DataBaseConexion bd;
+    private DataBaseConexion bd;
     private FirebaseAuth mAuth;
-    FireBaseDataConexion Data;
+    private FireBaseDataConexion Data;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
         this.bd = new DataBaseConexion(this);
         pulsarBoton();
         pulsarTexto();
+        pulsarAnonimo();
 
     }
 
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void pulsarTexto(){
-        TextView CreateUser = (TextView) findViewById(R.id.CrearUsuario);
+        TextView CreateUser = (TextView) findViewById(R.id.crearUsuario);
         CreateUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -118,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     private void iniciarRegistro(){
         startActivity(new Intent(this, CrearUsuario.class));
@@ -153,11 +157,11 @@ public class MainActivity extends AppCompatActivity {
 //Peta cuando el usuario nuevo no tiene datos en la nube.
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void update(FirebaseUser user){
-        UserData usr ;
+        UserData usr;
         String id= user.getUid();
         String email = user.getEmail();
         //Si no existe el usuario de forma local, crea el usuario en la base de datos local y
-        // pone todos los datos de la nube en la base de datos local
+        // introduce todos los datos de la nube en la base de datos local
         if(!bd.ExistUser(id)) {
             Toast.makeText(MainActivity.this, "Datos locales de el usuario no existentes buscando en la nube.", Toast.LENGTH_SHORT).show();
             Data= new FireBaseDataConexion(FirebaseDatabase.getInstance());
@@ -170,6 +174,25 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, sesion_iniciada.class);
         intent.putExtra(this.OBJETO,usr);
         startActivity(intent);
+        finish();
+    }
+
+    private void pulsarAnonimo(){
+        TextView Anonimo = (TextView) findViewById(R.id.inicioAnonimo);
+        Anonimo.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                iniciarAnonimo();
+            }
+        });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void iniciarAnonimo(){
+        Intent intent = new Intent(this, sesion_anonima.class);
+        startActivity(intent);
+        finish();
     }
 
 }

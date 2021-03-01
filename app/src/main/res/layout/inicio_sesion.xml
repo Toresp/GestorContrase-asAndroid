@@ -63,8 +63,8 @@
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
+            android:layout_width="409dp"
+            android:layout_height="137dp"
             android:layout_marginTop="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -87,7 +87,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/CrearUsuario"
+                android:id="@+id/crearUsuario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -97,7 +97,35 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/Login" />
+                app:layout_constraintTop_toBottomOf="@+id/Login"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/inicioAnonimo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="19dp"
+                android:text="Inicia sesión de manera anónima"
+                android:textColor="@color/AntiqueWhite"
+                android:textStyle=""
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/crearUsuario"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <TextView
+                android:id="@+id/O"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="o"
+                android:textColor="@color/black"
+                android:textStyle=""
+                app:layout_constraintBottom_toTopOf="@+id/inicioAnonimo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/crearUsuario" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

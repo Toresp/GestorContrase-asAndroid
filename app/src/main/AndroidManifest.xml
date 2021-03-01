@@ -16,6 +16,7 @@
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
 
         </activity>
+        <activity android:name=".sesion_anonima"></activity>
         <activity
             android:name=".Pop"
             android:theme="@style/Theme.AppCompat.NoActionBar"

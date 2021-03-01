@@ -45,39 +45,7 @@ public class DataBaseConexion {
             return resultadoF;
         }
 
-        public Boolean editDatos(UserData us, String oldpage, PassData data){
-            int result;
-            String consulta = "uid=? AND page=? ";
-            SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
-            ContentValues values = new ContentValues();
-            values.put("page",data.getPage());
-            values.put("password",data.getPassword());
-            values.put("creation_date",data.getPassword());
-            values.put("uid",us.UserID);
-            String[] Param={us.UserID, oldpage};
-            try {
-                SQLiteDatabase db = appbd.getWritableDatabase();
-                result = db.update("UPASS", values,consulta,Param);
-                db.close();
-                return result!=-1;
-            }catch(Exception Ex){
-                return false;
-            }
-        }
 
-        public Boolean DelDatos(String id, String page) {
-            int num;
-            String whereClause = "uid = ? AND page = ?";
-            String whereArgs[] = {id,page};
-            try{
-                SQLiteDatabase db = appbd.getWritableDatabase();
-                num = db.delete("UPASS",whereClause,whereArgs);
-                db.close();
-                return num!=-1;
-            }catch(Exception Ex){
-                return false;
-            }
-        }
 
 
 
@@ -161,6 +129,58 @@ public class DataBaseConexion {
         if (result == -1)
             return false;
         return true;
+    }
+
+    public Boolean editDatos(UserData us, String oldpage, PassData data){
+        int result;
+        String consulta = "uid=? AND page=? ";
+        SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("page",data.getPage());
+        values.put("password",data.getPassword());
+        values.put("creation_date",data.getPassword());
+        values.put("uid",us.UserID);
+        String[] Param={us.UserID, oldpage};
+        try {
+            SQLiteDatabase db = appbd.getWritableDatabase();
+            result = db.update("UPASS", values,consulta,Param);
+            db.close();
+            return result!=-1;
+        }catch(Exception Ex){
+            return false;
+        }
+    }
+
+    public Boolean DelDatos(String id, String page) {
+        int num;
+        String whereClause = "uid = ? AND page = ?";
+        String whereArgs[] = {id,page};
+        try{
+            SQLiteDatabase db = appbd.getWritableDatabase();
+            num = db.delete("UPASS",whereClause,whereArgs);
+            db.close();
+            return num!=-1;
+        }catch(Exception Ex){
+            return false;
+        }
+    }
+
+    public Boolean EditUser(String id,String email){
+        int result;
+        String consulta = "uid=? AND page=? ";
+        SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("uid",id);
+        values.put("email",email);
+        String[] Param={"anonimo","anonimo"};
+        try {
+            SQLiteDatabase db = appbd.getWritableDatabase();
+            result = db.update("USER", values,consulta,Param);
+            db.close();
+            return result!=-1;
+        }catch(Exception Ex){
+            return false;
+        }
     }
 
 

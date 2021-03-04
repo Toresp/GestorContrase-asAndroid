@@ -43,7 +43,8 @@ public class CrearUsuario extends AppCompatActivity {
         //Averigua si la activity fue lanzada desde la pantalla de inicio de sesión o la pantalla de anónimo.
         try{
             CreatedFrom = (Boolean) getIntent().getSerializableExtra(sesion_anonima.Launched);
-
+            if(CreatedFrom == null)
+                CreatedFrom = false;
         }catch (Exception Ex){
             CreatedFrom = false;
         }
@@ -92,7 +93,7 @@ public class CrearUsuario extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             // Creado usuario correctamente.
                             Log.d("DEPURACION", "createUserWithEmail:success");
-                            if(bd.CrearUsuario(mAuth.getUid(), Datos[0]))
+                            if(bd.CrearUsuario(mAuth.getUid(), Datos[0],false))
                                 Toast.makeText(CrearUsuario.this, "Usuario Creado con exito.",
                                         Toast.LENGTH_SHORT).show();
                             Update();
@@ -104,7 +105,8 @@ public class CrearUsuario extends AppCompatActivity {
                         }
                     }
                 });
-            }
+            }else Toast.makeText(CrearUsuario.this, "Las contraseñas no coinciden.",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -130,12 +132,7 @@ public class CrearUsuario extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Creado usuario correctamente.
-                            Log.d("DEPURACION", "createUserWithEmail:success");
-                            if(bd.EditUser(mAuth.getUid(), Datos[0]))
-                                Toast.makeText(CrearUsuario.this, "Usuario Creado con exito.",
-                                        Toast.LENGTH_SHORT).show();
-                            Update();
+                            //Borrado el metodo anterior.
 
                         } else {
                             // Fallo al crear usuario.
@@ -145,7 +142,8 @@ public class CrearUsuario extends AppCompatActivity {
                         }
                     }
                 });
-            }
+            }else Toast.makeText(CrearUsuario.this, "Las contraseñas no coinciden.",
+                    Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -1,18 +1,14 @@
 package com.example.proyectomiguelsambademartnez;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class Pop extends AppCompatDialogFragment {
@@ -57,7 +53,7 @@ public class Pop extends AppCompatDialogFragment {
                         listener.applyText(pass, site,oldpage);
                     }
                 });
-        Site = view.findViewById(R.id.editTextSite);
+        Site = view.findViewById(R.id.editTextUsername);
         password = view.findViewById(R.id.editTextPass);
         Site.setText(oldpage);
         password.setText(pass);

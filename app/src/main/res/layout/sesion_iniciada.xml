@@ -10,15 +10,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Button"
-            app:layout_constraintEnd_toStartOf="@+id/Añadir"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/Añadir"
             android:layout_width="wrap_content"
@@ -28,8 +19,7 @@
             android:clickable="true"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_add"
-            android:contentDescription="TODO" />
+            app:srcCompat="@android:drawable/ic_menu_add"/>
 
         <ScrollView
             android:layout_width="match_parent"

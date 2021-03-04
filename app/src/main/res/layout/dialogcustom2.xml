@@ -14,7 +14,7 @@
         android:layout_marginEnd="18dp"
         android:layout_marginBottom="18dp"
         android:ems="10"
-        android:hint="Pagina"
+        android:hint="Usuario"
         android:inputType="textPersonName" />
 
     <EditText
@@ -29,5 +29,17 @@
         android:hint="Contraseña"
         android:inputType="textPassword"
         />
+
+    <EditText
+        android:id="@+id/editTextPass2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="18dp"
+        android:ems="10"
+        android:hint="Repetir contraseña"
+        android:inputType="textPassword" />
 
 </LinearLayout>

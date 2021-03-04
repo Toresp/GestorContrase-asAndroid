@@ -23,8 +23,12 @@ public class DataBaseConexion {
 //Recoge todos los datos de el usuario desde la base de datos local.
     public UserData getDatos(String uid, String email) {
         User resultado = new User(uid,email);
+        String consulta = "";
         List<PassData> Datos = new ArrayList<>();
-        String consulta = "SELECT page,password,creation_date FROM UPASS WHERE uid=?";
+        if(email != ""){
+            consulta = "SELECT page,password,creation_date FROM UPASS WHERE uid=?";
+
+        }else consulta = "SELECT apage,apassword,acreation_date FROM AUPASS WHERE username=?";
         UserData resultadoF = null;
         String[] param = {resultado.UserID};
         try {
@@ -47,10 +51,6 @@ public class DataBaseConexion {
 
 
 
-
-
-
-
     void depuracion(String consulta, String[] param) {
         String texto = "Consulta: " + consulta + " Valores: ";
         for (String p : param) {
@@ -59,31 +59,50 @@ public class DataBaseConexion {
         Log.d("DEPURACIÓN", texto);
     }
 //Añade una contraseña a la base de datos local
-    public Boolean AñadirContraseña(String id,PassData data){
-        long result;
+//Si el local es false crea un Usuario que se sube a la nube si es true crea uno local
+    public Boolean AñadirContraseña(String id,PassData data,Boolean local){
+        long result=-1;
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("page",data.getPage());
-        values.put("password",data.getPassword());
-        values.put("creation_date",data.getCreation_date());
-        values.put("uid",id);
-        result = sqlLiteDB.insert("UPASS", null, values);
+        if (!local){
+            values.put("page",data.getPage());
+            values.put("password",data.getPassword());
+            values.put("creation_date",data.getCreation_date());
+            values.put("uid",id);
+            result = sqlLiteDB.insert("UPASS", null, values);
+
+        }else{
+            values.put("apage",data.getPage());
+            values.put("apassword",data.getPassword());
+            values.put("acreation_date",data.getCreation_date());
+            values.put("username",id);
+            result = sqlLiteDB.insert("AUPASS", null, values);
+        }
         sqlLiteDB.close();
         if (result == -1)
             return false;
         return true;
     }
 
-    public Boolean AñadirContraseña(List<PassData> data, String id){
+    //Si el local es false crea un Usuario que se sube a la nube si es true crea uno local
+    public Boolean AñadirContraseña(List<PassData> data, String id,Boolean local){
         long result=0;
         for (int i=0; i < data.size();i++) {
             SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
             ContentValues values = new ContentValues();
-            values.put("page", data.get(i).getPage());
-            values.put("password", data.get(i).getPassword());
-            values.put("creation_date", data.get(i).getCreation_date());
-            values.put("uid", id);
-            result = sqlLiteDB.insert("UPASS", null, values);
+            if(!local){
+                values.put("page", data.get(i).getPage());
+                values.put("password", data.get(i).getPassword());
+                values.put("creation_date", data.get(i).getCreation_date());
+                values.put("uid", id);
+                result = sqlLiteDB.insert("UPASS", null, values);
+            }else{
+                values.put("apage", data.get(i).getPage());
+                values.put("apassword", data.get(i).getPassword());
+                values.put("acreation_date", data.get(i).getCreation_date());
+                values.put("username", id);
+                result = sqlLiteDB.insert("AUPASS", null, values);
+            }
             sqlLiteDB.close();
         }
         if (result == -1)
@@ -92,10 +111,16 @@ public class DataBaseConexion {
     }
 
 //Comprueba la existencia en la base de datos local de el id de el usuario y de la pagina vinculada
-    public  Boolean ExistPage(String id, String page){
+    public Boolean ExistPage(String id, String page, Boolean local){
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+        String consulta;
         String[] param = {id,page};
-        String consulta = "SELECT * FROM UPASS WHERE uid=? AND page=?";
+        if(!local){
+             consulta = "SELECT * FROM UPASS WHERE uid=? AND page=?";
+
+        }else{
+            consulta = "SELECT * FROM AUPASS WHERE username=? AND apage=?";
+        }
         Cursor cursor = sqlLiteDB.rawQuery(consulta, param);
         if(cursor.moveToFirst()){
             appbd.close();
@@ -103,7 +128,7 @@ public class DataBaseConexion {
         }
         return false;
     }
-
+    //Si el local es false crea un Usuario que se sube a la nube si es true crea uno local
     public Boolean ExistUser(String id){
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
         String[] param = {id};
@@ -117,70 +142,104 @@ public class DataBaseConexion {
     }
 
 
-
-    public Boolean CrearUsuario(String id,String email){
+//Si el local es false crea un Usuario que se sube a la nube si es true crea uno local
+    public Boolean CrearUsuario(String id,String email,Boolean local){
         long result;
         SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("uid",id);
-        values.put("email",email);
-        result = sqlLiteDB.insert("USER", null, values);
-        sqlLiteDB.close();
+        if(!local) {
+            values.put("uid", id);
+            values.put("email", email);
+            result = sqlLiteDB.insert("USER", null, values);
+        }else {
+            values.put("username", id);
+            values.put("password", email);
+            result = sqlLiteDB.insert("AUSER", null, values);
+            sqlLiteDB.close();
+        }
         if (result == -1)
             return false;
         return true;
     }
 
-    public Boolean editDatos(UserData us, String oldpage, PassData data){
+    public Boolean editDatos(UserData us, String oldpage, PassData data,Boolean local){
         int result;
-        String consulta = "uid=? AND page=? ";
-        SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+        String consulta;
         ContentValues values = new ContentValues();
-        values.put("page",data.getPage());
-        values.put("password",data.getPassword());
-        values.put("creation_date",data.getPassword());
-        values.put("uid",us.UserID);
+        SQLiteDatabase db = appbd.getWritableDatabase();
         String[] Param={us.UserID, oldpage};
-        try {
-            SQLiteDatabase db = appbd.getWritableDatabase();
+        if(!local){
+            consulta = "uid=? AND page=? ";
+            values.put("page",data.getPage());
+            values.put("password",data.getPassword());
+            values.put("creation_date",data.getPassword());
+            values.put("uid",us.UserID);
             result = db.update("UPASS", values,consulta,Param);
+        }
+        else{
+            consulta = "username=? AND apage=? ";
+            values.put("apage",data.getPage());
+            values.put("apassword",data.getPassword());
+            values.put("acreation_date",data.getPassword());
+            values.put("username",us.UserID);
+            result = db.update("AUPASS", values,consulta,Param);
+        }
             db.close();
             return result!=-1;
-        }catch(Exception Ex){
-            return false;
-        }
     }
 
-    public Boolean DelDatos(String id, String page) {
+    public Boolean DelDatos(String id, String page, Boolean local) {
         int num;
-        String whereClause = "uid = ? AND page = ?";
+        String whereClause;
+        SQLiteDatabase db = appbd.getWritableDatabase();
         String whereArgs[] = {id,page};
-        try{
-            SQLiteDatabase db = appbd.getWritableDatabase();
+        if(!local){
+           whereClause = "uid = ? AND page = ?";
             num = db.delete("UPASS",whereClause,whereArgs);
+        }else{
+            whereClause = "username = ? AND apage = ?";
+            num = db.delete("AUPASS",whereClause,whereArgs);
+        }
             db.close();
             return num!=-1;
-        }catch(Exception Ex){
-            return false;
-        }
     }
 
-    public Boolean EditUser(String id,String email){
-        int result;
-        String consulta = "uid=? AND page=? ";
-        SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("uid",id);
-        values.put("email",email);
-        String[] Param={"anonimo","anonimo"};
+
+    public List getLocalUser(){
+        List<User> Datos = new ArrayList<>();
+        String consulta = "SELECT * FROM AUSER";
         try {
-            SQLiteDatabase db = appbd.getWritableDatabase();
-            result = db.update("USER", values,consulta,Param);
-            db.close();
-            return result!=-1;
+            SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+            Cursor cursor = sqlLiteDB.rawQuery(consulta,null);
+            this.depuracion(consulta, null);
+            Log.d("DEPURACIÓN", "Nº filas: " + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    Datos.add(new User(cursor.getString(1),""));
+                } while (cursor.moveToNext());
+            }
+            sqlLiteDB.close();
         }catch(Exception Ex){
-            return false;
+            Ex.printStackTrace();
         }
+        return Datos;
+    }
+
+    public Boolean AuthLocalUser(String username, String contraseña) {
+        String consulta = "SELECT * FROM AUSER WHERE username=? AND password=?";
+        try {
+            SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+            String param[] = {username, contraseña};
+            Cursor cursor = sqlLiteDB.rawQuery(consulta, param);
+            this.depuracion(consulta, param);
+            Log.d("DEPURACIÓN", "Nº filas: " + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                return true;
+            }
+        } catch (Exception Ex) {
+            Ex.printStackTrace();
+        }
+        return false;
     }
 
 

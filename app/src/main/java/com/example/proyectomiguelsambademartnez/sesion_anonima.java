@@ -43,16 +43,11 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sesion_anonima);
-        final String id= "anonimo";
-        final String email = "anonimo";
-        if(!bd.ExistUser(id)) {
-            Toast.makeText(getApplicationContext(), "Sus datos no están siendo almacenados en la nube, se necesita una cuenta para que estos sean almacenados.", Toast.LENGTH_SHORT).show();
-            bd.CrearUsuario(id, email);
-        }
-        usuario = this.bd.getDatos(id,email);
+        this.bd = new DataBaseConexion(this);
+        usuario = (UserData) getIntent().getSerializableExtra(MainActivity.OBJETO);
         this.bd = new DataBaseConexion(this);
         Iniciado = findViewById(R.id.iniciado);
-        Iniciado.setText("Contraseñas de " + email);
+        Iniciado.setText("Contraseñas de: "+ usuario.UserID);
         Botones = (LinearLayout) findViewById(R.id.Botones);
         Add = findViewById(R.id.Añadir);
         Add.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +58,7 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
             }
         });
         CargarContraseñas();
+        Toast.makeText(getApplicationContext(), "Sus datos no están siendo almacenados en la nube, se necesita una cuenta para que estos sean almacenados.", Toast.LENGTH_SHORT).show();
     }
 
     //Se crea un dialogo para introducir los datos al añadir una contraseña.
@@ -156,8 +152,8 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
         //Se encripta la contraseña antes de ser añadida.
         PassData data = PassData.encriptPassData(new PassData(pass,site,date),usuario.UserID);
         if(Añadir) {
-            if (!bd.ExistPage(usuario.UserID, site)) {
-                if (bd.AñadirContraseña(usuario.UserID, data)) {
+            if (!bd.ExistPage(usuario.UserID, site,true)) {
+                if (bd.AñadirContraseña(usuario.UserID, data,true)) {
                     usuario.addContraseña(pass, site, date);
                 } else
                     Toast.makeText(getApplicationContext(), "Error Inesperado", Toast.LENGTH_SHORT).show();
@@ -165,7 +161,7 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
             } else
                 Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
         }else{
-            if(!bd.editDatos(usuario,oldSite,data))
+            if(!bd.editDatos(usuario,oldSite,data,true))
                 Toast.makeText(getApplicationContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
             else{
                 Edit(oldSite, new PassData(pass, site, date));
@@ -179,7 +175,7 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
         List pass = usuario.getContraseñas();
         pass.remove(new PassData("", txt, ""));
         usuario.setContraseñas(pass);
-        bd.DelDatos(usuario.UserID, txt);
+        bd.DelDatos(usuario.UserID, txt,true);
     }
 
     public void Edit(String oldSite, PassData data){
@@ -216,7 +212,7 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_user, menu);
-        menu.removeItem(menu.getItem(1).getItemId());
+        menu.removeItem(menu.getItem(2).getItemId());
 
         return true;
 
@@ -232,8 +228,6 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
                 Intent datos = new Intent(this, CrearUsuario.class);
                 datos.putExtra(Launched,true);
                 startActivity(datos);
-                finish();
-
                 return true;
 
             default:

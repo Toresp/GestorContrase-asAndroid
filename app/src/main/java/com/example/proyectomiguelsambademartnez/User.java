@@ -14,10 +14,7 @@ public class User implements Serializable{
         this.UserID = id;
         this.email = email;
     }
-    User(){
-        UserID="ANONIMUS";
-        email=null;
-    }
+    User(){}
 
 
 

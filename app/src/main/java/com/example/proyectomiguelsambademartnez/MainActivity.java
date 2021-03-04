@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void iniciarRegistro(){
         startActivity(new Intent(this, CrearUsuario.class));
-        finish();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -165,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
         if(!bd.ExistUser(id)) {
             Toast.makeText(MainActivity.this, "Datos locales de el usuario no existentes buscando en la nube.", Toast.LENGTH_SHORT).show();
             Data= new FireBaseDataConexion(FirebaseDatabase.getInstance());
-            bd.CrearUsuario(id, email);
+            bd.CrearUsuario(id, email,false);
             Data.SyncFire(id,bd);
             Data.writeUltimaAct(id);
 
@@ -192,7 +191,6 @@ public class MainActivity extends AppCompatActivity {
     public void iniciarAnonimo(){
         Intent intent = new Intent(this, sesion_anonima.class);
         startActivity(intent);
-        finish();
     }
 
 }

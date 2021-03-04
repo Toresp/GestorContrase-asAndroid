@@ -3,9 +3,11 @@ package com.example.proyectomiguelsambademartnez;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +36,6 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     private DataBaseConexion bd;
     private LinearLayout Botones;
     private TextView Iniciado;
-    private Button Actualizar;
     private FloatingActionButton Add;
     private FireBaseDataConexion Data;
     private Boolean Añadir = false;
@@ -47,14 +48,6 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         setContentView(R.layout.sesion_iniciada);
         usuario = (UserData) getIntent().getSerializableExtra(MainActivity.OBJETO);
         Data = new FireBaseDataConexion(FirebaseDatabase.getInstance());
-        Actualizar = findViewById(R.id.button);
-        Actualizar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                actualizarDatos();
-            }
-        });
-
         this.bd = new DataBaseConexion(this);
         Iniciado = findViewById(R.id.iniciado);
         Iniciado.setText("Contraseñas de " + usuario.email);
@@ -159,8 +152,8 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         //Se encripta la contraseña antes de ser añadida.
         PassData data = PassData.encriptPassData(new PassData(pass,site,date),usuario.UserID);
         if(Añadir) {
-            if (!bd.ExistPage(usuario.UserID, site)) {
-                if (bd.AñadirContraseña(usuario.UserID, data)) {
+            if (!bd.ExistPage(usuario.UserID, site,false)) {
+                if (bd.AñadirContraseña(usuario.UserID, data,false)) {
                     usuario.addContraseña(pass, site, date);
                     Data.writeFire(usuario);
                 } else
@@ -169,7 +162,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
             } else
                 Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
         }else{
-            if(!bd.editDatos(usuario,oldSite,data))
+            if(!bd.editDatos(usuario,oldSite,data,false))
                 Toast.makeText(getApplicationContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
             else{
                 Edit(oldSite, new PassData(pass, site, date));
@@ -190,7 +183,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         List pass = usuario.getContraseñas();
         pass.remove(new PassData("", txt, ""));
         usuario.setContraseñas(pass);
-        bd.DelDatos(usuario.UserID, txt);
+        bd.DelDatos(usuario.UserID, txt,false);
     }
     public void Edit(String oldSite, PassData data){
         List pass = usuario.getContraseñas();
@@ -222,6 +215,39 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
             }
         });
         popup.show();
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_user, menu);
+        menu.removeItem(menu.getItem(3).getItemId());
+
+        return true;
+
+    }
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.refresh:
+                actualizarDatos();
+            //Se muestra en pantalla el menu de opciones.
+            case R.id.options:
+
+                return true;
+            //Se lleva a la pantalla de creación de usuario y todos los datos de anonimo de sustituyen por los nuevos datos creados.
+            case R.id.logout:
+                Intent datos = new Intent(this, CrearUsuario.class);
+                startActivity(datos);
+
+                return true;
+
+            default:
+
+                return super.onOptionsItemSelected(item);
+
+        }
+
+
     }
 
 

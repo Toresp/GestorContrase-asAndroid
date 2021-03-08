@@ -49,7 +49,7 @@ public class FireBaseDataConexion {
                     PassData data = dataSnapshot.getValue(PassData.class);
                      Datos.add(data);
                 }
-                bd.AñadirContraseña(Datos,id);
+                bd.AñadirContraseña(Datos,id,false);
             }
 
             @Override

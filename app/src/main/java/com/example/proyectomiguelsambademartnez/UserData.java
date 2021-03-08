@@ -23,6 +23,8 @@ public class UserData extends User {
         }
         this.Contraseñas = contraseñas;
     }
+    UserData(){
+    }
 
 
     public void addContraseña(String contraseña, String localizacion, String fechaCambio){

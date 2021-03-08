@@ -30,7 +30,6 @@ public class PassData implements Serializable {
 
     public static PassData decryptPassData(PassData D,String Id){
         try{
-            //Probablemente mal
             return new PassData(DataProtect.decryptPass(D.password,Id),D.page,D.creation_date);
 
 

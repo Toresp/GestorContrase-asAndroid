@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class CrearUsuario extends AppCompatActivity {
     private EditText user;
@@ -27,6 +28,8 @@ public class CrearUsuario extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private Boolean CreatedFrom;
     private Button send;
+    private UserData usLocal;
+    private FireBaseDataConexion con;
 
 
     @Override
@@ -34,6 +37,7 @@ public class CrearUsuario extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.crearusuario);
         mAuth = FirebaseAuth.getInstance();
+        con = new FireBaseDataConexion(FirebaseDatabase.getInstance());
         bd = new DataBaseConexion(this);
         volver = findViewById(R.id.volverInicio);
         user = findViewById(R.id.editTextUser);
@@ -43,6 +47,7 @@ public class CrearUsuario extends AppCompatActivity {
         //Averigua si la activity fue lanzada desde la pantalla de inicio de sesión o la pantalla de anónimo.
         try{
             CreatedFrom = (Boolean) getIntent().getSerializableExtra(sesion_anonima.Launched);
+            usLocal = (UserData) getIntent().getSerializableExtra(sesion_anonima.LocalPasswords);
             if(CreatedFrom == null)
                 CreatedFrom = false;
         }catch (Exception Ex){
@@ -132,8 +137,15 @@ public class CrearUsuario extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            //Borrado el metodo anterior.
+                            usLocal.UserID = mAuth.getUid();
+                            usLocal.email = Datos[0];
+                            bd.CrearUsuario(usLocal.UserID,usLocal.email,false);
+                            bd.AñadirContraseña(usLocal.getContraseñas(),usLocal.UserID,false);
 
+                            con.writeFire(usLocal);
+                            Toast.makeText(CrearUsuario.this, "Usuario Creado con Exito y datos en la nube",
+                                    Toast.LENGTH_SHORT).show();
+                            Update();
                         } else {
                             // Fallo al crear usuario.
                             Log.w("DEPURACION", "createUserWithEmail:failure", task.getException());

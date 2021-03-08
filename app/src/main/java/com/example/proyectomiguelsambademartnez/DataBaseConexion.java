@@ -207,15 +207,14 @@ public class DataBaseConexion {
 
     public List getLocalUser(){
         List<User> Datos = new ArrayList<>();
-        String consulta = "SELECT * FROM AUSER";
+        String consulta = "SELECT username,password FROM AUSER";
         try {
             SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
             Cursor cursor = sqlLiteDB.rawQuery(consulta,null);
-            this.depuracion(consulta, null);
             Log.d("DEPURACIÓN", "Nº filas: " + cursor.getCount());
             if (cursor.moveToFirst()) {
                 do {
-                    Datos.add(new User(cursor.getString(1),""));
+                    Datos.add(new User(cursor.getString(0),""));
                 } while (cursor.moveToNext());
             }
             sqlLiteDB.close();

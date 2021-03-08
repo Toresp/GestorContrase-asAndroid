@@ -175,11 +175,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
     private void pulsarAnonimo(){
         TextView Anonimo = (TextView) findViewById(R.id.inicioAnonimo);
         Anonimo.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 iniciarAnonimo();
@@ -187,10 +185,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void iniciarAnonimo(){
-        Intent intent = new Intent(this, sesion_anonima.class);
-        startActivity(intent);
+        startActivity(new Intent(this, usuariosLocales.class));
+        finish();
     }
 
 }

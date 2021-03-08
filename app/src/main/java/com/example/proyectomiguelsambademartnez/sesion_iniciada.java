@@ -236,7 +236,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                 return true;
             //Se lleva a la pantalla de creación de usuario y todos los datos de anonimo de sustituyen por los nuevos datos creados.
             case R.id.logout:
-                Intent datos = new Intent(this, CrearUsuario.class);
+                Intent datos = new Intent(this, MainActivity.class);
                 startActivity(datos);
 
                 return true;

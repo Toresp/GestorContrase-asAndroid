@@ -18,7 +18,14 @@
         <activity android:name=".sesion_anonima"
             android:theme="@style/Theme.AppCompat"></activity>
         <activity
+            android:name=".usuariosLocales"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
             android:name=".Pop"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            tools:ignore="Instantiatable" />
+        <activity
+            android:name=".PopCreator"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             tools:ignore="Instantiatable" />
         <activity android:name=".MainActivity">

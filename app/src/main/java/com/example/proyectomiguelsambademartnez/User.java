@@ -18,9 +18,6 @@ public class User implements Serializable{
 
 
 
-    public String getEmail() {
-        return email;
-    }
 
 
 }

@@ -23,12 +23,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class sesion_anonima extends AppCompatActivity implements Pop.PopListener {
     public final static String Launched = "True";
+    public final static String LocalPasswords = "DATA";
     private UserData usuario;
     private DataBaseConexion bd;
     private LinearLayout Botones;
@@ -44,7 +46,7 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.sesion_anonima);
         this.bd = new DataBaseConexion(this);
-        usuario = (UserData) getIntent().getSerializableExtra(MainActivity.OBJETO);
+        usuario = (UserData) getIntent().getSerializableExtra(usuariosLocales.DATOS);
         this.bd = new DataBaseConexion(this);
         Iniciado = findViewById(R.id.iniciado);
         Iniciado.setText("Contraseñas de: "+ usuario.UserID);
@@ -213,6 +215,7 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_user, menu);
         menu.removeItem(menu.getItem(2).getItemId());
+        menu.removeItem(menu.getItem(0).getItemId());
 
         return true;
 
@@ -227,7 +230,9 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
             case R.id.signin:
                 Intent datos = new Intent(this, CrearUsuario.class);
                 datos.putExtra(Launched,true);
+                datos.putExtra(LocalPasswords, usuario);
                 startActivity(datos);
+
                 return true;
 
             default:

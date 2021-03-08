@@ -19,6 +19,7 @@ public class PopCreator extends AppCompatDialogFragment {
     private PopCreatorListener listener;
     private String title;
     private Boolean logIn;
+    private String logInUsername;
 
     PopCreator(String title, Boolean log){
         this.title = title;
@@ -30,7 +31,7 @@ public class PopCreator extends AppCompatDialogFragment {
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view;
         if(logIn){
-            view = inflater.inflate(R.layout.dialogcustom2, null);
+            view = inflater.inflate(R.layout.dialogcustom3, null);
             builder.setView(view)
                     .setTitle(title)
                     .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -39,13 +40,14 @@ public class PopCreator extends AppCompatDialogFragment {
 
                         }
                     })
-                    .setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
+                    .setPositiveButton("Iniciar Sesion", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String pass = password.getText().toString();
-                                listener.logApplyText(pass);
+                                listener.logApplyText(pass,logInUsername);
                         }
                     });
+            password = view.findViewById(R.id.editTextPass);
         }else {
             view = inflater.inflate(R.layout.dialogcustom2, null);
             builder.setView(view)
@@ -62,17 +64,19 @@ public class PopCreator extends AppCompatDialogFragment {
                             String pass = password.getText().toString();
                             String username = Username.getText().toString();
                             String pass2 = password2.getText().toString();
-                            if (pass == pass2)
-                                listener.createApplyText(pass, username);
-                            else Toast.makeText(getContext(), "Las contraseñas no coinciden.",
+                            if(pass.length()>4) {
+                                if (pass.equals(pass2))
+                                    listener.createApplyText(pass, username);
+                                else Toast.makeText(getContext(), "Las contraseñas no coinciden.",
+                                        Toast.LENGTH_SHORT).show();
+                            }else Toast.makeText(getContext(), "Contraseña demasiado corta.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     });
+            Username = view.findViewById(R.id.editTextUsername);
+            password = view.findViewById(R.id.editTextPass);
+            password2 = view.findViewById(R.id.editTextPass2);
         }
-
-        Username = view.findViewById(R.id.editTextUsername);
-        password = view.findViewById(R.id.editTextPass);
-        password2 = view.findViewById(R.id.editTextPass2);
         return builder.create();
     }
 
@@ -87,9 +91,13 @@ public class PopCreator extends AppCompatDialogFragment {
 
     }
 
+    public void setLogInUsername(String logInUsername) {
+        this.logInUsername = logInUsername;
+    }
+
 
     public interface PopCreatorListener {
-        void createApplyText(String pass, String username);
-        void logApplyText(String username);
+        void createApplyText(String pass, String name);
+        void logApplyText(String password,String username);
     }
 }

@@ -65,8 +65,8 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
 
     //Se crea un dialogo para introducir los datos al añadir una contraseña.
     private void openDialog() {
-        Pop DialogPop = new Pop("Añadir contraseña");
-        DialogPop.show(getSupportFragmentManager(), "Añadir Contraseña");
+        Pop DialogPop = new Pop("Introduzca contraseña");
+        DialogPop.show(getSupportFragmentManager(), "Introduzca Contraseña");
     }
 
     //Se crea un dialogo para editar los datos existentes de el usuario.

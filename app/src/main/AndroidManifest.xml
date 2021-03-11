@@ -21,6 +21,9 @@
             android:name=".usuariosLocales"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
+            android:name=".Calendario"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
             android:name=".Pop"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             tools:ignore="Instantiatable" />

@@ -70,9 +70,9 @@ public class usuariosLocales extends AppCompatActivity implements PopCreator.Pop
         DialogPop.show(getSupportFragmentManager(), "Crear Usuario");
     }
     private void logInDialog(String name) {
-        PopCreator DialogPop = new PopCreator("Añadir contraseña",true);
+        PopCreator DialogPop = new PopCreator("Introduzca su contraseña",true);
         DialogPop.setLogInUsername(name);
-        DialogPop.show(getSupportFragmentManager(), "Añadir Contraseña");
+        DialogPop.show(getSupportFragmentManager(), "Introduzca su contraseña");
     }
 
 

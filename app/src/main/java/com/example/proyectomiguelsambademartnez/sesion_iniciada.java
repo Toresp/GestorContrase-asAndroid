@@ -32,6 +32,7 @@ import java.util.List;
 
 
 public class sesion_iniciada extends AppCompatActivity implements Pop.PopListener {
+    public final static String DATOS = "usuario";
     private UserData usuario;
     private DataBaseConexion bd;
     private LinearLayout Botones;
@@ -148,7 +149,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     @Override
     //La variable oldpage se usa solo en caso de que se editen los datos.
     public void applyText(String pass, String site, String oldSite) {
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).substring(0,10);
         //Se encripta la contraseña antes de ser añadida.
         PassData data = PassData.encriptPassData(new PassData(pass,site,date),usuario.UserID);
         if(Añadir) {
@@ -174,9 +175,10 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void actualizarDatos() {
-        Data.SyncFire(usuario.UserID,bd);
-        Data.writeUltimaAct(usuario.UserID);
-        CargarContraseñas();
+            Data.SyncFire(usuario.UserID, bd);
+            Data.writeUltimaAct(usuario.UserID);
+            CargarContraseñas();
+
     }
 
     public void Delete(String txt) {
@@ -230,8 +232,12 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         switch (item.getItemId()) {
             case R.id.refresh:
                 actualizarDatos();
+                return true;
             //Se muestra en pantalla el menu de opciones.
             case R.id.options:
+                Intent intent = new Intent(this, Calendario.class);
+                intent.putExtra(this.DATOS,usuario);
+                startActivity(intent);
 
                 return true;
             //Se lleva a la pantalla de creación de usuario y todos los datos de anonimo de sustituyen por los nuevos datos creados.

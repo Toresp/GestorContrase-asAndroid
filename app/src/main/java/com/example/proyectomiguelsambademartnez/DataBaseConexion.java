@@ -38,6 +38,7 @@ public class DataBaseConexion {
             Log.d("DEPURACIÓN", "Nº filas: " + cursor.getCount());
             if (cursor.moveToFirst()) {
                 do {
+                    //Fallo extraño al recibir los datos de la base de datos se repite la contraseña donde debería estar la fecha de creación
                     Datos.add(new PassData(cursor.getString(1), cursor.getString(0), cursor.getString(2)));
                 } while (cursor.moveToNext());
             }

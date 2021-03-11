@@ -1,6 +1,7 @@
 package com.example.proyectomiguelsambademartnez;
 
 import android.os.Build;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -44,12 +45,17 @@ public class FireBaseDataConexion {
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-               List<PassData> Datos = new ArrayList();
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    PassData data = dataSnapshot.getValue(PassData.class);
-                     Datos.add(data);
+                try {
+
+
+                    List<PassData> Datos = new ArrayList();
+                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                        PassData data = dataSnapshot.getValue(PassData.class);
+                        Datos.add(data);
+                    }
+                    bd.AñadirContraseña(Datos, id, false);
+                }catch(Exception Ex){
                 }
-                bd.AñadirContraseña(Datos,id,false);
             }
 
             @Override

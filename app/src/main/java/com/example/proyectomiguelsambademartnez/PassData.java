@@ -16,7 +16,7 @@ public class PassData implements Serializable {
     PassData(String pass, String pagina, String fech) {
         password = pass;
         page = pagina;
-        creation_date =fech;
+        creation_date = fech;
     }
 
     public static PassData encriptPassData(PassData D,String Id){

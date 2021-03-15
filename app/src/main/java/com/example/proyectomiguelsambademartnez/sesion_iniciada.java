@@ -177,6 +177,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     public void actualizarDatos() {
             Data.SyncFire(usuario.UserID, bd);
             Data.writeUltimaAct(usuario.UserID);
+            usuario.setContraseñas(bd.getPasswords(usuario.UserID));
             CargarContraseñas();
 
     }

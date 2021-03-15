@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
                             Log.w("DEPURACION", "signInWithEmail:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Autenticacion fallida.",
                                     Toast.LENGTH_SHORT).show();
-
                         }
                     }
                 });

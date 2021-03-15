@@ -38,7 +38,6 @@ public class DataBaseConexion {
             Log.d("DEPURACIÓN", "Nº filas: " + cursor.getCount());
             if (cursor.moveToFirst()) {
                 do {
-                    //Fallo extraño al recibir los datos de la base de datos se repite la contraseña donde debería estar la fecha de creación
                     Datos.add(new PassData(cursor.getString(1), cursor.getString(0), cursor.getString(2)));
                 } while (cursor.moveToNext());
             }
@@ -48,6 +47,29 @@ public class DataBaseConexion {
         }
             resultadoF = new UserData(resultado, Datos);
             return resultadoF;
+        }
+
+        public List<PassData> getPasswords(String id){
+            String consulta = "";
+            List<PassData> Datos = new ArrayList<>();
+            consulta = "SELECT apage,apassword,acreation_date FROM AUPASS WHERE username=?";
+            UserData resultadoF = null;
+            String[] param = {id};
+            try {
+                SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+                Cursor cursor = sqlLiteDB.rawQuery(consulta, param);
+                this.depuracion(consulta, param);
+                Log.d("DEPURACIÓN", "Nº filas: " + cursor.getCount());
+                if (cursor.moveToFirst()) {
+                    do {
+                        Datos.add(new PassData(cursor.getString(1), cursor.getString(0), cursor.getString(2)));
+                    } while (cursor.moveToNext());
+                }
+                sqlLiteDB.close();
+            }catch(Exception Ex){
+                Ex.printStackTrace();
+            }
+            return Datos;
         }
 
 

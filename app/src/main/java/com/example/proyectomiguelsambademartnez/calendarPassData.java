@@ -29,17 +29,21 @@ public class calendarPassData{
         for (int i = 0;i<Pass.size(); i++){
             e.add(Pass.get(i).getPage());
             int j = i+1;
-            while(Pass.get(i).getCreation_date().equals(Pass.get(j).getCreation_date())){
-                e.add(Pass.get(j).getPage());
-                j++;
+            if(j<Pass.size()) {
+
+
+                while (Pass.get(i).getCreation_date().equals(Pass.get(j).getCreation_date())) {
+                    e.add(Pass.get(j).getPage());
+                    j++;
+                }
             }
-            date="";
+            date = "";
             for (String s : e) {
-                date += ", "+ s;
+                date += ", " + s;
             }
             events.put(e.get(i),date);
             posDif.add(i);
-            i=j;
+            i=j-1;
         }
     }
 

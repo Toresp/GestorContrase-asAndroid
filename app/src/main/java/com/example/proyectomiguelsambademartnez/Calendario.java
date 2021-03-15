@@ -19,11 +19,11 @@ public class Calendario extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calendario);
         contrasenhas = ((UserData) getIntent().getSerializableExtra(sesion_iniciada.DATOS)).getContraseñas();
-        calendarData = new calendarPassData(contrasenhas);
-        calendarData.writeJson(this.getApplicationContext());
         calendario = (WebView) this.findViewById(R.id.calendar);
         calendario.getSettings().setJavaScriptEnabled(true);
+        calendario.addJavascriptInterface(new calendarPassData(contrasenhas), "Android");
         calendario.loadUrl("file:///android_asset/index.html");
+        calendario.measure(10, 10);
     }
 
 

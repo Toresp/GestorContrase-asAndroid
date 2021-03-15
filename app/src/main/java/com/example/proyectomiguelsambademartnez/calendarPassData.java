@@ -1,6 +1,7 @@
 package com.example.proyectomiguelsambademartnez;
 
 import android.content.Context;
+import android.webkit.JavascriptInterface;
 
 import com.google.gson.JsonArray;
 
@@ -14,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class calendarPassData{
+public class calendarPassData {
     private HashMap<String, String> events = new HashMap<>();
     private List<Integer> posDif = new ArrayList<>();
     private List<PassData> contrasenhas;
@@ -40,41 +41,31 @@ public class calendarPassData{
                 }
                 date = "";
                 for (String s : e) {
-                    date += s + ", " ;
+                    date += s + ", ";
                 }
-                    events.put(contrasenhas.get(i).getCreation_date(), date);
-
+                events.put(contrasenhas.get(i).getCreation_date(), date);
                 posDif.add(i);
                 e.clear();
                 i = j - 1;
             }
         }
     }
-
-    public Boolean writeJson(Context context){
+    @JavascriptInterface
+    public JsonArray getJson() {
         JsonArray Datos = new JsonArray();
-        for ( int i=0;i<posDif.size();i++){
+        for (int i = 0; i < posDif.size(); i++) {
             JSONObject data = new JSONObject();
             try {
-                String date= contrasenhas.get(posDif.get(i)).getCreation_date();
+                String date = contrasenhas.get(posDif.get(i)).getCreation_date();
                 data.put("date", date);
-                data.put("event","Cambiar contraseña de la pagina "+ events.get(date));
+                data.put("event", "Cambiar contraseña de la pagina " + events.get(date));
                 Datos.add(String.valueOf(data));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
-        }
-        try {
-            File file = new File(context.getFilesDir(),"calendarJson.json");
-            FileWriter fileWriter = new FileWriter(file);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(Datos.toString());
-            bufferedWriter.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
 
+        }
+        return Datos;
     }
 }

@@ -110,31 +110,9 @@ document.querySelector('.next').addEventListener('click',()=>{
     renderCalendar();
 });
 
+obj = Android.getJson();
+renderCalendar(data);
 
-const DateParser = () =>{
-  let date = "";
-  if(date1.getMonth() < 10 || date1.getDate() < 10){
-    if(date1.getMonth() < 10  && date1.getDate() < 10){
-      date = date1.getFullYear().toString()+"-"+"0"+(date1.getMonth()+1).toString()+"-"+"0"+date1.getDate().toString();
-    }else{
-      if(date1.getMonth() < 10){
-        date = date1.getFullYear().toString()+"-"+"0"+(date1.getMonth()+1).toString()+"-"+date1.getDate().toString();
-      }else{
-        date = date1.getFullYear().toString()+"-"+(date1.getMonth()+1).toString()+"-"+"0"+date1.getDate().toString();
-      }
-    }
-  }else{date = date1.getFullYear().toString()+"-"+(date1.getMonth()+1).toString()+"-"+date1.getDate().toString();}
-  return date;
-
-}
-
-
-
-
-$.getJSON('calendarJson', function(data) {
-  obj = data;
-  renderCalendar(data);
-});
 
               
 

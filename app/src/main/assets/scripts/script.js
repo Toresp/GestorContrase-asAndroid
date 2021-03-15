@@ -101,13 +101,11 @@ const renderCalendar = () => {
 
 
 document.querySelector('.prev').addEventListener('click',()=>{
-    obj = JSON.parse(Android.getJson());
   date1.setMonth(date1.getMonth() - 1);
   renderCalendar();
 });
 
 document.querySelector('.next').addEventListener('click',()=>{
-  obj = JSON.parse(Android.getJson());
   date1.setMonth(date1.getMonth() + 1);
     renderCalendar();
 });

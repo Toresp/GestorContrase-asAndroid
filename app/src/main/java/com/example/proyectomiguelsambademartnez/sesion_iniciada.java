@@ -149,7 +149,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     @Override
     //La variable oldpage se usa solo en caso de que se editen los datos.
     public void applyText(String pass, String site, String oldSite) {
-        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")).substring(0,10);
+        String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss")).substring(0,10);
         PassData data = PassData.encriptPassData(new PassData(pass,site,date),usuario.UserID);//Se encripta la contraseña antes de ser añadida.
         if(Añadir) {
             if (!bd.ExistPage(usuario.UserID, site,false)) {

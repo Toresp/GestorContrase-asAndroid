@@ -51,7 +51,7 @@ public class calendarPassData {
         }
     }
     @JavascriptInterface
-    public JsonArray getJson() {
+    public String getJson() {
         JsonArray Datos = new JsonArray();
         for (int i = 0; i < posDif.size(); i++) {
             JSONObject data = new JSONObject();
@@ -66,6 +66,6 @@ public class calendarPassData {
 
 
         }
-        return Datos;
+        return Datos.toString();
     }
 }

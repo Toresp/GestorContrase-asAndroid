@@ -195,7 +195,7 @@ public class DataBaseConexion {
             consulta = "uid=? AND page=? ";
             values.put("page",data.getPage());
             values.put("password",data.getPassword());
-            values.put("creation_date",data.getPassword());
+            values.put("creation_date",data.getCreation_date());
             values.put("uid",us.UserID);
             result = db.update("UPASS", values,consulta,Param);
         }

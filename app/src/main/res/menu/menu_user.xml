@@ -6,7 +6,7 @@
         android:title="Actualizar" />
     <item
         android:id="@+id/options"
-        android:title="Opciones" />
+        android:title="Ver Calendario" />
     <item
         android:id="@+id/logout"
         android:title="Cerrar Sesión" />

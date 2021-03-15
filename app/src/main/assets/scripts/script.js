@@ -1,5 +1,5 @@
 const date1 = new Date();
-var obj;
+var obj = JSON.parse(Android.getJson());
 const renderCalendar = () => {
   date1.setDate(1);
   const diasMes = document.querySelector(".days");
@@ -101,16 +101,17 @@ const renderCalendar = () => {
 
 
 document.querySelector('.prev').addEventListener('click',()=>{
+    obj = JSON.parse(Android.getJson());
   date1.setMonth(date1.getMonth() - 1);
   renderCalendar();
 });
 
 document.querySelector('.next').addEventListener('click',()=>{
+  obj = JSON.parse(Android.getJson());
   date1.setMonth(date1.getMonth() + 1);
     renderCalendar();
 });
 
-obj = Android.getJson();
 renderCalendar(data);
 
 

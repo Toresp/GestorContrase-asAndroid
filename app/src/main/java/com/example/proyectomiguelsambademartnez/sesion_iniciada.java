@@ -1,6 +1,7 @@
 package com.example.proyectomiguelsambademartnez;
 
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -22,10 +23,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -250,10 +253,43 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
             default:
 
                 return super.onOptionsItemSelected(item);
-
         }
+    }
 
+    public void SendNotification(){
+        notificacion not = new notificacion(this.getApplicationContext(),null);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        int i=0;
+        for (PassData data : (List<PassData>) usuario.getContraseñas()) {
+            i++;
+            try {
+                switch (not.notificacionCheck(data.getCreation_date())) {
+                    case 0: not.setContentText("Han pasado 3 meses desde que añadistes la contraseña de la página " + data.getPage()+" Deberías cambiarla!!!");
 
+                        notificationManager.notify(i, not.build());
+                        not.notify();
+                        break;
+
+                    case 1: not.setContentText("En 1 días harán dos mesesdesde que añadistes la página " + data.getPage()+" acuerdate de cambiarla!!!");
+                        notificationManager.notify(i, not.build());
+                        not.notify();
+                        break;
+
+                    case 2: not.setContentText("En 2 días harán dos mesesdesde que añadistes la página " + data.getPage()+" acuerdate de cambiarla!!!");
+                        notificationManager.notify(i, not.build());
+                        not.notify();
+                        break;
+
+                    case 3: not.setContentText("Han pasado mas de 3 meses desde que añadistes la contraseña de la página " + data.getPage()+" Deberías cambiarla!!!");
+                        notificationManager.notify(i, not.build());
+                        not.notify();
+                        break;
+                    default:break;
+                }
+            }catch(ParseException Ex){
+                return;
+            }
+        }
     }
 
 

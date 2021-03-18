@@ -29,8 +29,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -97,6 +100,8 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                 final TextView txt = new TextView(this.getBaseContext());
                 final HideButton btnHide = new HideButton(this.getBaseContext(), ((PassData) usuario.getContraseñas().get(i)).getPassword());
                 btnHide.setLayoutParams(new LinearLayout.LayoutParams(80,80));
+                if(notificacionCheck(((PassData) usuario.getContraseñas().get(i)).getCreation_date()))
+                    btn.setBackgroundColor(getResources().getColor(R.color.RojoPastel));
                 menu.setLayoutParams(new LinearLayout.LayoutParams(80,80));
                 txt.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -226,9 +231,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_user, menu);
         menu.removeItem(menu.getItem(3).getItemId());
-
         return true;
-
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -255,44 +258,20 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    public void SendNotification(){
-        notificacion not = new notificacion(this.getApplicationContext(),null);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        int i=0;
-        for (PassData data : (List<PassData>) usuario.getContraseñas()) {
-            i++;
-            try {
-                switch (not.notificacionCheck(data.getCreation_date())) {
-                    case 0: not.setContentText("Han pasado 3 meses desde que añadistes la contraseña de la página " + data.getPage()+" Deberías cambiarla!!!");
-
-                        notificationManager.notify(i, not.build());
-                        not.notify();
-                        break;
-
-                    case 1: not.setContentText("En 1 días harán dos mesesdesde que añadistes la página " + data.getPage()+" acuerdate de cambiarla!!!");
-                        notificationManager.notify(i, not.build());
-                        not.notify();
-                        break;
-
-                    case 2: not.setContentText("En 2 días harán dos mesesdesde que añadistes la página " + data.getPage()+" acuerdate de cambiarla!!!");
-                        notificationManager.notify(i, not.build());
-                        not.notify();
-                        break;
-
-                    case 3: not.setContentText("Han pasado mas de 3 meses desde que añadistes la contraseña de la página " + data.getPage()+" Deberías cambiarla!!!");
-                        notificationManager.notify(i, not.build());
-                        not.notify();
-                        break;
-                    default:break;
-                }
-            }catch(ParseException Ex){
-                return;
-            }
+    //Comprueba la fecha de creación de una contraseña en caso de haber sido creada hace 3 meses envia datos para enviar la notificación
+    public Boolean notificacionCheck(String date) {
+        try {
+            Date creation_date = new SimpleDateFormat("MM-dd-yyyy").parse(date);
+            Date today = new SimpleDateFormat("MM-dd-yyyy").parse(String.valueOf(Calendar.getInstance().getTime()));
+            creation_date.setMonth(creation_date.getMonth() + 3);
+            return creation_date.equals(today);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
+        }catch(Exception Ex){
+            return false;
         }
     }
-
-
 
 
 }

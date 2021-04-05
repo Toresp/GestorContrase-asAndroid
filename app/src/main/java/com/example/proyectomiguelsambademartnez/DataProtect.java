@@ -18,6 +18,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 public class DataProtect {
+    private final static String key = "Aio123fd@@spsd##a231324$$9dfaa";
 
     public static String decryptPass(String password, String mainKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {

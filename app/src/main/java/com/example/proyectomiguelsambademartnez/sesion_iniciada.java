@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.ParseException;
@@ -248,6 +249,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                 return true;
             //Se lleva a la pantalla de creación de usuario y todos los datos de anonimo de sustituyen por los nuevos datos creados.
             case R.id.logout:
+                FirebaseAuth.getInstance().signOut();
                 Intent datos = new Intent(this, MainActivity.class);
                 startActivity(datos);
 

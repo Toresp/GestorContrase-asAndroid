@@ -40,13 +40,13 @@
                 android:id="@+id/editTextPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ems="10"
-                android:hint="Contraseña"
-                android:inputType="textPassword"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="18dp"
                 android:layout_marginEnd="18dp"
-                android:layout_marginBottom="18dp"/>
+                android:layout_marginBottom="18dp"
+                android:ems="10"
+                android:hint="@string/contraseña"
+                android:inputType="textPassword" />
 
             <EditText
                 android:id="@+id/editTextPassword2"
@@ -57,7 +57,7 @@
                 android:layout_marginEnd="18dp"
                 android:layout_marginBottom="18dp"
                 android:ems="10"
-                android:hint="Repetir Contraseña"
+                android:hint="@string/repetir_contraseñar"
                 android:inputType="textPassword" />
 
             <Button
@@ -66,17 +66,17 @@
                 android:layout_height="33dp"
                 android:layout_gravity="center"
                 android:background="@color/skyblue"
-                android:text="Crear Usuario" />
+                android:text="@string/crear_us" />
 
             <TextView
                 android:id="@+id/volverInicio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Volver al inicio de sesión"
+                android:text="@string/back_inicio"
                 android:textAlignment="center"
-                android:textStyle="bold"
-                android:textColor="@color/neonGreen"/>
+                android:textColor="@color/neonGreen"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

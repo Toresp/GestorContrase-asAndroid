@@ -38,13 +38,13 @@ public class Pop extends AppCompatDialogFragment {
         View view = inflater.inflate(R.layout.dialogcustom,null);
         builder.setView(view)
                 .setTitle(title)
-                .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 })
-                .setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
+                .setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String pass = password.getText().toString();

@@ -3,14 +3,14 @@
 
     <item
         android:id="@+id/refresh"
-        android:title="Actualizar" />
+        android:title="@string/actualizar" />
     <item
         android:id="@+id/options"
-        android:title="Ver Calendario" />
+        android:title="@string/ver_calendar" />
     <item
         android:id="@+id/logout"
-        android:title="Cerrar Sesión" />
+        android:title="@string/logout" />
     <item
         android:id="@+id/signin"
-        android:title="Crear Usuario" />
+        android:title="@string/crear_us" />
 </menu>

@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.hardware.biometrics.BiometricManager;
+import android.hardware.biometrics.BiometricPrompt;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -47,6 +49,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     private FloatingActionButton Add;
     private FireBaseDataConexion Data;
     private Boolean Añadir = false;
+    private BiometricPrompt promptInfo;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -58,7 +61,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         Data = new FireBaseDataConexion(FirebaseDatabase.getInstance());
         this.bd = new DataBaseConexion(this);
         Iniciado = findViewById(R.id.iniciado);
-        Iniciado.setText("Contraseñas de " + usuario.email);
+        Iniciado.setText(getResources().getString(R.string.contra_de) + usuario.email );
         Botones = (LinearLayout) findViewById(R.id.Botones);
         Add = findViewById(R.id.Añadir);
         Add.setOnClickListener(new View.OnClickListener() {
@@ -73,12 +76,12 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
 
     //Se crea un dialogo para introducir los datos al añadir una contraseña
     private void openDialog() {
-        Pop DialogPop = new Pop("Añadir contraseña");
-        DialogPop.show(getSupportFragmentManager(), "Añadir Contraseña");
+        Pop DialogPop = new Pop(getResources().getString(R.string.add));
+        DialogPop.show(getSupportFragmentManager(), getResources().getString(R.string.intro_pass));
     }
     private void editDialog(String p, String pass){
         Pop DialogPop = new Pop(p,"Editar contraseña",pass);
-        DialogPop.show(getSupportFragmentManager(), "Editar contaseña");
+        DialogPop.show(getSupportFragmentManager(), getResources().getString(R.string.edit_pass));
     }
 
     //Se generan todos los botones y textbox de acuerdo al numero de contraseñas existentes
@@ -129,7 +132,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                     @Override
                     public void onClick(View v) {
                         setClipboard(btn.getText().toString());
-                        Toast.makeText(getApplicationContext(), "Copiado al portapapeles!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.clipboard), Toast.LENGTH_SHORT).show();
                     }
                 });
                 l1.addView(txt);
@@ -166,13 +169,13 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                     usuario.addContraseña(pass, site, date);
                     Data.writeFire(usuario);
                 } else
-                    Toast.makeText(getApplicationContext(), "Error Inesperado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
                 CargarContraseñas();
             } else
-                Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.ya_existe), Toast.LENGTH_SHORT).show();
         }else{
             if(!bd.editDatos(usuario,oldSite,data,false))
-                Toast.makeText(getApplicationContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_editable), Toast.LENGTH_SHORT).show();
             else{
                 Edit(oldSite, new PassData(pass, site, date));
                 CargarContraseñas();

@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         File file = new File(bddestino);
         Log.d("DEPURACIÓN", "Ruta archivo BD: " + bddestino);
         if (file.exists()) {
-            Toast.makeText(getApplicationContext(), "La BD no se va a copiar. Ya existe", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.Existencia), Toast.LENGTH_LONG).show();
             return; // Ya existe la BD, salimos del método
         }
         String pathbd = "/data/data/" + getPackageName()
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             inputstream.close();
             outputstream.flush();
             outputstream.close();
-            Toast.makeText(getApplicationContext(), "BASE DE DATOS COPIADA", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.copied), Toast.LENGTH_LONG).show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("DEPURACION", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Autenticacion fallida.",
+                            Toast.makeText(MainActivity.this, getResources().getString(R.string.auth),
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
         //Si no existe el usuario de forma local, crea el usuario en la base de datos local y
         // introduce todos los datos de la nube en la base de datos local
         if(!bd.ExistUser(id)) {
-            Toast.makeText(MainActivity.this, "Datos locales de el usuario no existentes buscando en la nube.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, getResources().getString(R.string.cloud), Toast.LENGTH_SHORT).show();
             Data= new FireBaseDataConexion(FirebaseDatabase.getInstance());
             bd.CrearUsuario(id, email,false);
             Data.SyncFire(id,bd);

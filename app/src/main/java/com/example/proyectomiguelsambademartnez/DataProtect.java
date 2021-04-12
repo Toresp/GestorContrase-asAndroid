@@ -5,6 +5,7 @@ import android.util.Base64;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -18,11 +19,11 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 public class DataProtect {
-    private final static String key = "Aio123fd@@spsd##a231324$$9dfaa";
+    private final static String Fkey = "AEBP145ach@~$sAC";
 
     public static String decryptPass(String password, String mainKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
-        SecretKeySpec secretKey = generateKey(mainKey);
+        Key secretKey = generateKey();
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, secretKey);
         byte[] datosDescoficados = Base64.decode(password, Base64.DEFAULT);
@@ -34,7 +35,7 @@ public class DataProtect {
     public static String encryptPass(String password, String mainKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException, UnsupportedEncodingException
     {
-        SecretKeySpec secretKey = generateKey(mainKey);
+        Key secretKey = generateKey();
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, secretKey);
         byte[] datosEncriptadosBytes = cipher.doFinal(password.getBytes());
@@ -42,12 +43,10 @@ public class DataProtect {
         return datosEncriptadosString;
     }
 
-    private static SecretKeySpec generateKey(String mainKey)
-            throws NoSuchAlgorithmException, UnsupportedEncodingException
+    private static SecretKeySpec generateKey()
+            throws  UnsupportedEncodingException
     {
-        MessageDigest sha = MessageDigest.getInstance("SHA-256");
-        byte[] key = mainKey.getBytes("UTF-8");
-        key = sha.digest(key);
+        byte[] key = Fkey.getBytes("UTF-8");
         SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
         return secretKey;
     }

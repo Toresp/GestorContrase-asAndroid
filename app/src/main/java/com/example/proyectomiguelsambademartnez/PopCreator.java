@@ -34,13 +34,13 @@ public class PopCreator extends AppCompatDialogFragment {
             view = inflater.inflate(R.layout.dialogcustom3, null);
             builder.setView(view)
                     .setTitle(title)
-                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
                         }
                     })
-                    .setPositiveButton("Iniciar Sesion", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getResources().getString(R.string.login), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String pass = password.getText().toString();
@@ -52,13 +52,13 @@ public class PopCreator extends AppCompatDialogFragment {
             view = inflater.inflate(R.layout.dialogcustom2, null);
             builder.setView(view)
                     .setTitle(title)
-                    .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
 
                         }
                     })
-                    .setPositiveButton("Añadir", new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getResources().getString(R.string.add), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             String pass = password.getText().toString();
@@ -67,9 +67,9 @@ public class PopCreator extends AppCompatDialogFragment {
                             if(pass.length()>4) {
                                 if (pass.equals(pass2))
                                     listener.createApplyText(pass, username);
-                                else Toast.makeText(getContext(), "Las contraseñas no coinciden.",
+                                else Toast.makeText(getContext(), getResources().getString(R.string.no_match),
                                         Toast.LENGTH_SHORT).show();
-                            }else Toast.makeText(getContext(), "Contraseña demasiado corta.",
+                            }else Toast.makeText(getContext(), getResources().getString(R.string.too_short),
                                     Toast.LENGTH_SHORT).show();
                         }
                     });

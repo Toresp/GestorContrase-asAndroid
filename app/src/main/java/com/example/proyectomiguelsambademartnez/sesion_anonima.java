@@ -49,7 +49,7 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
         usuario = (UserData) getIntent().getSerializableExtra(usuariosLocales.DATOS);
         this.bd = new DataBaseConexion(this);
         Iniciado = findViewById(R.id.iniciado);
-        Iniciado.setText("Contraseñas de: "+ usuario.UserID);
+        Iniciado.setText(getResources().getString(R.string.contra_de) + usuario.UserID);
         Botones = (LinearLayout) findViewById(R.id.Botones);
         Add = findViewById(R.id.Añadir);
         Add.setOnClickListener(new View.OnClickListener() {
@@ -60,18 +60,18 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
             }
         });
         CargarContraseñas();
-        Toast.makeText(getApplicationContext(), "Sus datos no están siendo almacenados en la nube, se necesita una cuenta para que estos sean almacenados.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(),getResources().getString(R.string.no_cloud), Toast.LENGTH_SHORT).show();
     }
 
     //Se crea un dialogo para introducir los datos al añadir una contraseña.
     private void openDialog() {
-        Pop DialogPop = new Pop("Introduzca contraseña");
+        Pop DialogPop = new Pop(getResources().getString(R.string.intro_pass));
         DialogPop.show(getSupportFragmentManager(), "Introduzca Contraseña");
     }
 
     //Se crea un dialogo para editar los datos existentes de el usuario.
     private void editDialog(String p, String pass){
-        Pop DialogPop = new Pop(p,"Editar contraseña",pass);
+        Pop DialogPop = new Pop(p,getResources().getString(R.string.edit_pass),pass);
         DialogPop.show(getSupportFragmentManager(), "Editar contaseña");
     }
 
@@ -121,7 +121,7 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
                     @Override
                     public void onClick(View v) {
                         setClipboard(btn.getText().toString());
-                        Toast.makeText(getApplicationContext(), "Copiado al portapapeles!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.clipboard), Toast.LENGTH_SHORT).show();
                     }
                 });
                 l1.addView(txt);
@@ -158,13 +158,13 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
                 if (bd.AñadirContraseña(usuario.UserID, data,true)) {
                     usuario.addContraseña(pass, site, date);
                 } else
-                    Toast.makeText(getApplicationContext(), "Error Inesperado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
                 CargarContraseñas();
             } else
-                Toast.makeText(getApplicationContext(), "Pagina ya existente, no se puede añadir", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.ya_existe), Toast.LENGTH_SHORT).show();
         }else{
             if(!bd.editDatos(usuario,oldSite,data,true))
-                Toast.makeText(getApplicationContext(), "No se pudo editar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_editable), Toast.LENGTH_SHORT).show();
             else{
                 Edit(oldSite, new PassData(pass, site, date));
                 CargarContraseñas();

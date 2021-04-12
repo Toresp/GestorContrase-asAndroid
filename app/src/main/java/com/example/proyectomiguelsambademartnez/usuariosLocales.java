@@ -66,11 +66,11 @@ public class usuariosLocales extends AppCompatActivity implements PopCreator.Pop
 
     }
     private void createUserDialog() {
-        PopCreator DialogPop = new PopCreator("Crear Usuario",false);
+        PopCreator DialogPop = new PopCreator(getResources().getString(R.string.crear_us),false);
         DialogPop.show(getSupportFragmentManager(), "Crear Usuario");
     }
     private void logInDialog(String name) {
-        PopCreator DialogPop = new PopCreator("Introduzca su contraseña",true);
+        PopCreator DialogPop = new PopCreator(getResources().getString(R.string.intro_pass),true);
         DialogPop.setLogInUsername(name);
         DialogPop.show(getSupportFragmentManager(), "Introduzca su contraseña");
     }
@@ -86,7 +86,7 @@ public class usuariosLocales extends AppCompatActivity implements PopCreator.Pop
             Users.add(new User(user,""));
             cargarUsuarios();
         }else{
-            Toast.makeText(getApplicationContext(), "Usuario ya existente!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), getResources().getString(R.string.us_exist),Toast.LENGTH_SHORT).show();
         }
 
 
@@ -104,7 +104,7 @@ public class usuariosLocales extends AppCompatActivity implements PopCreator.Pop
             startActivity(intent);
 
         }else{
-            Toast.makeText(getApplicationContext(), "Contraseña erronea.",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),getResources().getString(R.string.wrong_pass) ,Toast.LENGTH_SHORT).show();
         }
     }
 }

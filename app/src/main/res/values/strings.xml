@@ -35,4 +35,8 @@
     <string name="wrong_pass">Contraseña errónea.</string>
     <string name="intro_pass">Introduzca su contraseña</string>
     <string name="edit_pass">Editar Contraseña</string>
+    <string name="finger_auth_fail">No se pudo reconocer la huella dactilar, intentelo de nuevo.</string>
+    <string name="finger_auth_done">Huella dactilar reconocida, accediendo a la aplicación...</string>
+
+
 </resources>

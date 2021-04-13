@@ -35,4 +35,6 @@
     <string name="wrong_pass">Wrong Password</string>
     <string name="intro_pass">Enter your password</string>
     <string name="edit_pass">Edit Password</string>
+    <string name="finger_auth_fail">fingerprint was not recognized, try again.</string>
+    <string name="finger_auth_done">Fingerprint recogniced, entering the aplication...</string>
 </resources>

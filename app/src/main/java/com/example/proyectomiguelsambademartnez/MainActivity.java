@@ -3,21 +3,17 @@ package com.example.proyectomiguelsambademartnez;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.biometric.BiometricManager;
+import androidx.biometric.BiometricPrompt;
 import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.app.KeyguardManager;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,11 +29,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.KeyStore;
+import java.util.concurrent.Executor;
 
-import javax.crypto.Cipher;
-
-import static com.example.proyectomiguelsambademartnez.DataProtect.generateKey;
+import static androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG;
+import static androidx.biometric.BiometricManager.Authenticators.DEVICE_CREDENTIAL;
 
 public class MainActivity extends AppCompatActivity {
     public final static String OBJETO = "UserData";
@@ -45,10 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private DataBaseConexion bd;
     private FirebaseAuth mAuth;
     private FireBaseDataConexion Data;
-    private FingerprintManager fingerprintManager;
-    private KeyguardManager keyguardManager;
-    private KeyStore keyStore;
-    private Cipher cipher;
+    private Executor executor;
+    private BiometricPrompt biometricPrompt;
+    private BiometricPrompt.PromptInfo promptInfo;
+
     private String KEY_NAME = "AndroidKey";
 
 
@@ -70,44 +65,60 @@ public class MainActivity extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
+    //Cuando la aplicación se inicie con un usuario aún logeado realizará un inicio de sesión solicitando la huella dactilar del usuario si este dispone de una
     public void onStart() {
         super.onStart();
         try {
             // Check if user is signed in (non-null) and update UI accordingly.
             //mAuth.signOut();
-            FirebaseUser currentUser = mAuth.getCurrentUser();
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-
-                fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
-                keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-
-                if (!fingerprintManager.isHardwareDetected() && ContextCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED &&
-                        !keyguardManager.isKeyguardSecure() && !fingerprintManager.hasEnrolledFingerprints()) {
-
-
-                } else {
-                    DataProtect.genKey();
-
-                    if (DataProtect.cipherInit()) {
-
-                        FingerprintManager.CryptoObject cryptoObject = new FingerprintManager.CryptoObject(cipher);
-                        FingerprintHandler fingerprintHandler = new FingerprintHandler(this);
-                        fingerprintHandler.startAuth(fingerprintManager, cryptoObject);
-                        update(currentUser);
-
-                    }
+            if(mAuth.getCurrentUser() != null) {
+                if (!ComprobarBiometria()) {
+                    update(mAuth.getCurrentUser());
                 }
-            }else{
-                update(currentUser);
+                executor = ContextCompat.getMainExecutor(this);
+                biometricPrompt = new BiometricPrompt(MainActivity.this,
+                        executor, new BiometricPrompt.AuthenticationCallback() {
+                    @Override
+                    public void onAuthenticationError(int errorCode,
+                                                      @NonNull CharSequence errString) {
+                        super.onAuthenticationError(errorCode, errString);
+                        Toast.makeText(getApplicationContext(),
+                                "Authentication error: " + errString, Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onAuthenticationSucceeded(
+                            @NonNull BiometricPrompt.AuthenticationResult result) {
+                        super.onAuthenticationSucceeded(result);
+                        Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.finger_auth_done), Toast.LENGTH_SHORT).show();
+                        update(mAuth.getCurrentUser());
+                    }
+
+                    @Override
+                    public void onAuthenticationFailed() {
+                        super.onAuthenticationFailed();
+                        Toast.makeText(getApplicationContext(), getResources().getString(R.string.finger_auth_fail),
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+
+                promptInfo = new BiometricPrompt.PromptInfo.Builder()
+                        .setTitle("Biometric login for my app")
+                        .setSubtitle("Log in using your biometric credential")
+                        .setNegativeButtonText("Use account password")
+                        .build();
+                biometricPrompt.authenticate(promptInfo);
+            }
+        }catch (Exception e) {
+                e.printStackTrace();
             }
 
-        }catch (Exception ex){
-
-        }
 }
 
-    private void copiarBD() {
+        private void copiarBD() {
         String bddestino = "/data/data/" + getPackageName() + "/databases/"
                 + AppBaseDatos.NOME_BD;
         File file = new File(bddestino);
@@ -228,5 +239,26 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(this, usuariosLocales.class));
         finish();
     }
+
+    public Boolean ComprobarBiometria(){
+        BiometricManager biometricManager = BiometricManager.from(this);
+        switch (biometricManager.canAuthenticate(BIOMETRIC_STRONG | DEVICE_CREDENTIAL)) {
+            case BiometricManager.BIOMETRIC_SUCCESS:
+                Log.d("MY_APP_TAG", "App can authenticate using biometrics.");
+                return true;
+            case BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE:
+                Log.e("MY_APP_TAG", "No biometric features available on this device.");
+                return false;
+            case BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE:
+                Log.e("MY_APP_TAG", "Biometric features are currently unavailable.");
+                return false;
+            case BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED:
+                // Prompts the user to create credentials that your app accepts.
+                return false;
+
+        }
+        return false;
+    }
+
 
 }

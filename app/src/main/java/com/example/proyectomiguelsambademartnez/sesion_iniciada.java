@@ -61,7 +61,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         Data = new FireBaseDataConexion(FirebaseDatabase.getInstance());
         this.bd = new DataBaseConexion(this);
         Iniciado = findViewById(R.id.iniciado);
-        Iniciado.setText(getResources().getString(R.string.contra_de) + usuario.email );
+        Iniciado.setText(getResources().getString(R.string.contra_de)+" " + usuario.email );
         Botones = (LinearLayout) findViewById(R.id.Botones);
         Add = findViewById(R.id.Añadir);
         Add.setOnClickListener(new View.OnClickListener() {

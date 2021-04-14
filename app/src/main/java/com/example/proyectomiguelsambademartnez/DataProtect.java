@@ -64,65 +64,6 @@ public class DataProtect {
         SecretKeySpec secretKey = new SecretKeySpec(key, "AES");
         return secretKey;
     }
-//genera una key para poder usar cipher en la verificación de biométrica.
-    @TargetApi(Build.VERSION_CODES.M)
-    public static void genKey() {
-
-        try {
-
-             keyStore = KeyStore.getInstance("AndroidKeyStore");
-            KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
-
-            keyStore.load(null);
-            keyGenerator.init(new
-                    KeyGenParameterSpec.Builder(KEY_NAME,
-                    KeyProperties.PURPOSE_ENCRYPT |
-                            KeyProperties.PURPOSE_DECRYPT)
-                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                    .setUserAuthenticationRequired(true)
-                    .setEncryptionPaddings(
-                            KeyProperties.ENCRYPTION_PADDING_PKCS7)
-                    .build());
-            keyGenerator.generateKey();
-
-        } catch (KeyStoreException | IOException | CertificateException
-                | NoSuchAlgorithmException | InvalidAlgorithmParameterException
-                | NoSuchProviderException e) {
-
-
-        }
-
-    }
-
-    //Metodo utilizado para la verificación biométrica.
-    @TargetApi(Build.VERSION_CODES.M)
-    public static boolean cipherInit() {
-        Cipher cipher;
-        try {
-            cipher = Cipher.getInstance(KeyProperties.KEY_ALGORITHM_AES + "/" + KeyProperties.BLOCK_MODE_CBC + "/" + KeyProperties.ENCRYPTION_PADDING_PKCS7);
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-            throw new RuntimeException("Failed to get Cipher", e);
-        }
-
-
-        try {
-
-            keyStore.load(null);
-
-            SecretKey key = (SecretKey) keyStore.getKey(KEY_NAME,
-                    null);
-
-            cipher.init(Cipher.ENCRYPT_MODE, key);
-
-            return true;
-
-        } catch (KeyPermanentlyInvalidatedException e) {
-            return false;
-        } catch (KeyStoreException | CertificateException | UnrecoverableKeyException | IOException | NoSuchAlgorithmException | InvalidKeyException e) {
-            throw new RuntimeException("Failed to init Cipher", e);
-        }
-
-    }
 
 
 

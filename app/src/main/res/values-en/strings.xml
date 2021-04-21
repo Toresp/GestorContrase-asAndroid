@@ -40,4 +40,5 @@
     <string name="finger_auth_done">Fingerprint recogniced, entering the aplication...</string>
     <string name="del_us">Delete Account</string>
     <string name="DialogDel">By doing this your account will be deleted including all its data, are you sure?</string>
+    <string name="VerCalendarOnline">This option is only avaliable with cloud accounts</string>
 </resources>

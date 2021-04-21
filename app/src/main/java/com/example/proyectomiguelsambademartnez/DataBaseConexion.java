@@ -264,6 +264,27 @@ public class DataBaseConexion {
         return false;
     }
 
+    public Boolean DeleteLocalUser(String username){
+        String consulta = "SELECT * FROM AUSER WHERE username=?";
+        try {
+            SQLiteDatabase sqlLiteDB = appbd.getWritableDatabase();
+            String param[] = {username};
+            Cursor cursor = sqlLiteDB.rawQuery(consulta, param);
+            this.depuracion(consulta, param);
+            Log.d("DEPURACIÓN", "Nº filas: " + cursor.getCount());
+            if (cursor.moveToFirst()) {
+                do {
+                    sqlLiteDB.delete("AUPASS","APAGE="+cursor.getString(0),null);
+                } while (cursor.moveToNext());
+                sqlLiteDB.delete("AUSER","username=?",param);
+            }
+            return true;
+        } catch (Exception Ex) {
+            Ex.printStackTrace();
+        }
+        return false;
+    }
+
 
 
 }

@@ -102,6 +102,7 @@ public class usuariosLocales extends AppCompatActivity implements PopCreator.Pop
             Intent intent = new Intent(this, sesion_anonima.class);
             intent.putExtra(this.DATOS,us);
             startActivity(intent);
+            finish();
 
         }else{
             Toast.makeText(getApplicationContext(),getResources().getString(R.string.wrong_pass) ,Toast.LENGTH_SHORT).show();

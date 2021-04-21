@@ -49,7 +49,6 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     private FloatingActionButton Add;
     private FireBaseDataConexion Data;
     private Boolean Añadir = false;
-    private BiometricPrompt promptInfo;
 
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -234,6 +233,7 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_user, menu);
+        menu.removeItem(menu.getItem(4).getItemId());
         menu.removeItem(menu.getItem(3).getItemId());
         return true;
     }

@@ -85,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(),
                                 "Authentication error: " + errString, Toast.LENGTH_SHORT)
                                 .show();
+                        mAuth.signOut();
                     }
 
                     @Override
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAuthenticationFailed() {
                         super.onAuthenticationFailed();
+                        mAuth.signOut();
                         Toast.makeText(getApplicationContext(), getResources().getString(R.string.finger_auth_fail),
                                 Toast.LENGTH_SHORT)
                                 .show();
@@ -113,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                 biometricPrompt.authenticate(promptInfo);
             }
         }catch (Exception e) {
+            mAuth.signOut();
                 e.printStackTrace();
             }
 

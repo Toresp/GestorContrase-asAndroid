@@ -41,7 +41,6 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
     private Boolean Añadir = false;
 
 
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,18 +50,18 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
         usuario = (UserData) getIntent().getSerializableExtra(usuariosLocales.DATOS);
         this.bd = new DataBaseConexion(this);
         Iniciado = findViewById(R.id.iniciado);
-        Iniciado.setText(getResources().getString(R.string.contra_de)+" " + usuario.UserID);
+        Iniciado.setText(getResources().getString(R.string.contra_de) + " " + usuario.UserID);
         Botones = (LinearLayout) findViewById(R.id.Botones);
         Add = findViewById(R.id.Añadir);
         Add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Añadir=true;
+                Añadir = true;
                 openDialog();
             }
         });
         CargarContraseñas();
-        Toast.makeText(getApplicationContext(),getResources().getString(R.string.no_cloud), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_cloud), Toast.LENGTH_SHORT).show();
     }
 
     //Se crea un dialogo para introducir los datos al añadir una contraseña.
@@ -72,8 +71,8 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
     }
 
     //Se crea un dialogo para editar los datos existentes de el usuario.
-    private void editDialog(String p, String pass){
-        Pop DialogPop = new Pop(p,getResources().getString(R.string.edit_pass),pass);
+    private void editDialog(String p, String pass) {
+        Pop DialogPop = new Pop(p, getResources().getString(R.string.edit_pass), pass);
         DialogPop.show(getSupportFragmentManager(), "Editar contaseña");
     }
 
@@ -96,8 +95,8 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
                 final Button btn = new Button(this.getBaseContext());
                 final TextView txt = new TextView(this.getBaseContext());
                 final HideButton btnHide = new HideButton(this.getBaseContext(), ((PassData) usuario.getContraseñas().get(i)).getPassword());
-                btnHide.setLayoutParams(new LinearLayout.LayoutParams(80,80));
-                menu.setLayoutParams(new LinearLayout.LayoutParams(80,80));
+                btnHide.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
+                menu.setLayoutParams(new LinearLayout.LayoutParams(80, 80));
                 txt.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 btn.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 txt.setText(((PassData) usuario.getContraseñas().get(i)).getPage());
@@ -115,7 +114,7 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
                 menu.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        showPopup(v, txt.getText().toString(),btnHide.pass);
+                        showPopup(v, txt.getText().toString(), btnHide.pass);
 
                     }
                 });
@@ -154,20 +153,20 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
     public void applyText(String pass, String site, String oldSite) {
         String date = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         //Se encripta la contraseña antes de ser añadida.
-        PassData data = PassData.encriptPassData(new PassData(pass,site,date),usuario.UserID);
-        if(Añadir) {
-            if (!bd.ExistPage(usuario.UserID, site,true)) {
-                if (bd.AñadirContraseña(usuario.UserID, data,true)) {
+        PassData data = PassData.encriptPassData(new PassData(pass, site, date), usuario.UserID);
+        if (Añadir) {
+            if (!bd.ExistPage(usuario.UserID, site, true)) {
+                if (bd.AñadirContraseña(usuario.UserID, data, true)) {
                     usuario.addContraseña(pass, site, date);
                 } else
                     Toast.makeText(getApplicationContext(), getResources().getString(R.string.error), Toast.LENGTH_SHORT).show();
                 CargarContraseñas();
             } else
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.ya_existe), Toast.LENGTH_SHORT).show();
-        }else{
-            if(!bd.editDatos(usuario,oldSite,data,true))
+        } else {
+            if (!bd.editDatos(usuario, oldSite, data, true))
                 Toast.makeText(getApplicationContext(), getResources().getString(R.string.no_editable), Toast.LENGTH_SHORT).show();
-            else{
+            else {
                 Edit(oldSite, new PassData(pass, site, date));
                 CargarContraseñas();
             }
@@ -179,16 +178,16 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
         List pass = usuario.getContraseñas();
         pass.remove(new PassData("", txt, ""));
         usuario.setContraseñas(pass);
-        bd.DelDatos(usuario.UserID, txt,true);
+        bd.DelDatos(usuario.UserID, txt, true);
     }
 
-    public void Edit(String oldSite, PassData data){
+    public void Edit(String oldSite, PassData data) {
         List pass = usuario.getContraseñas();
-        pass.set(pass.indexOf(new PassData("", oldSite, "")),data);
+        pass.set(pass.indexOf(new PassData("", oldSite, "")), data);
         usuario.setContraseñas(pass);
     }
 
-    public void showPopup(View v,final String p, final String pass) {
+    public void showPopup(View v, final String p, final String pass) {
         PopupMenu popup = new PopupMenu(this, v);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.editordel, popup.getMenu());
@@ -199,7 +198,7 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
                 switch (item.getItemId()) {
                     case R.id.edit:
                         Añadir = false;
-                        editDialog(p,pass);
+                        editDialog(p, pass);
                         return true;
                     case R.id.del:
                         Delete(p);
@@ -222,16 +221,19 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
         return true;
 
     }
+
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             //Se muestra en pantalla el menu de opciones.
             case R.id.options:
 
                 return true;
-            //Se lleva a la pantalla de creación de usuario y todos los datos de anonimo de sustituyen por los nuevos datos creados.
+            case R.id.calendar:
+                Toast.makeText(this, R.string.VerCalendarOnline, Toast.LENGTH_SHORT).show();
+                //Se lleva a la pantalla de creación de usuario y todos los datos de anonimo de sustituyen por los nuevos datos creados.
             case R.id.signin:
                 Intent datos = new Intent(this, CrearUsuario.class);
-                datos.putExtra(Launched,true);
+                datos.putExtra(Launched, true);
                 datos.putExtra(LocalPasswords, usuario);
                 startActivity(datos);
 
@@ -241,7 +243,9 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
                 builder.setMessage(R.string.DialogDel)
                         .setPositiveButton(R.string.afirmativo, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                // FIRE ZE MISSILES!
+                                bd.DeleteLocalUser(usuario.UserID);
+                                goBack();
+
                             }
                         })
                         .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -249,15 +253,18 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
                                 // User cancelled the dialog
                             }
                         });
+                builder.show();
 
 
-
-                            default:
+            default:
 
                 return super.onOptionsItemSelected(item);
 
         }
+    }
 
-
+    private void goBack() {
+        startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 }

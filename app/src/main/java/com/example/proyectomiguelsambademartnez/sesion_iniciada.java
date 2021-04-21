@@ -255,6 +255,8 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                 FirebaseAuth.getInstance().signOut();
                 Intent datos = new Intent(this, MainActivity.class);
                 startActivity(datos);
+                finish();
+
 
                 return true;
 

@@ -237,7 +237,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void iniciarAnonimo(){
         startActivity(new Intent(this, usuariosLocales.class));
-        finish();
     }
 
     public Boolean ComprobarBiometria(){

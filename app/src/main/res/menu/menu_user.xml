@@ -13,4 +13,7 @@
     <item
         android:id="@+id/signin"
         android:title="@string/crear_us" />
+    <item
+        android:id="@+id/delAcc"
+        android:title="@string/del_us" />
 </menu>

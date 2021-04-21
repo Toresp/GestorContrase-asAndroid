@@ -1,6 +1,8 @@
 package com.example.proyectomiguelsambademartnez;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -234,8 +236,23 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
                 startActivity(datos);
 
                 return true;
+            case R.id.delAcc:
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage(R.string.DialogDel)
+                        .setPositiveButton(R.string.afirmativo, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // FIRE ZE MISSILES!
+                            }
+                        })
+                        .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
 
-            default:
+
+
+                            default:
 
                 return super.onOptionsItemSelected(item);
 

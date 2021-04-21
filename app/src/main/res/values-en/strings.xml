@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Pass Saviour</string>
+    <string name="afirmativo">Yes</string>
     <string name="Editar">Edit</string>
     <string name="Eliminar">Delete</string>
     <string name="Existencia">The DB isn´t going to be copied. It already exists</string>
@@ -26,7 +27,7 @@
     <string name="login_ano">Login anonymously</string>
     <string name="or">Or</string>
     <string name="usuarios_loc">Local Users</string>
-    <string name="cancel">Canel</string>
+    <string name="cancel">Cancel</string>
     <string name="add">Add</string>
     <string name="no_match">Passwords doesn´t match</string>
     <string name="too_short">Password too short.</string>
@@ -37,4 +38,6 @@
     <string name="edit_pass">Edit Password</string>
     <string name="finger_auth_fail">fingerprint was not recognized, try again.</string>
     <string name="finger_auth_done">Fingerprint recogniced, entering the aplication...</string>
+    <string name="del_us">Delete Account</string>
+    <string name="DialogDel">By doing this your account will be deleted including all its data, are you sure?</string>
 </resources>

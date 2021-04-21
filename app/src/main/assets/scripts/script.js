@@ -1,9 +1,9 @@
 const date1 = new Date();
-var obj = JSON.parse(Android.getJson());
 const renderCalendar = () => {
+var obj = JSON.parse(android.data());
   date1.setDate(1);
   const diasMes = document.querySelector(".days");
-  const ultimoDia = new Date(date1.getFullYear(), 
+  const ultimoDia = new Date(date1.getFullYear(),
   date1.getMonth()+1,0).getDate();
   const prevUltimoDia = new Date(date1.getFullYear(), 
   date1.getMonth(),0).getDate();
@@ -54,7 +54,6 @@ const renderCalendar = () => {
           const fecha = new Date(obj[l].date);
           if((date1.getMonth() === fecha.getMonth()) && (i === fecha.getDate())){
             dias += `<div class="todayEvent" id ="dia" data-title="${obj[l].event}">${i}</div>`;
-            alert("Debes cambiar la contraseña!!");
             found=true;
           }
         }
@@ -110,7 +109,7 @@ document.querySelector('.next').addEventListener('click',()=>{
     renderCalendar();
 });
 
-renderCalendar(data);
+renderCalendar();
 
 
               

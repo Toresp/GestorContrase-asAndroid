@@ -9,8 +9,8 @@
 
     <WebView
         android:id="@+id/calendar"
-        android:layout_width="334dp"
-        android:layout_height="495dp"
+        android:layout_width="412dp"
+        android:layout_height="734dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -89,15 +89,18 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         if (usuario.getContraseñas().size() > 0) {
             Botones.removeAllViews();
             for (int i = 0; i < usuario.getContraseñas().size(); i++) {
+                //Consiste de 3 linear layouts horizontales los cuales permiten que se alinee los dos botones del menu y ocultar a la derecha
+                LinearLayout l0 = new LinearLayout(this);
                 LinearLayout l1 = new LinearLayout(this);
-                //El l2 encierra los botones que van alineados a la derecha
                 LinearLayout l2 = new LinearLayout(this);
                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    l2.setGravity(RelativeLayout.ALIGN_RIGHT);
-                l1.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                l1.setOrientation(LinearLayout.HORIZONTAL);
+                l1.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT,1.0f));
                 l2.setLayoutParams(layoutParams);
+                l0.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+                l1.setOrientation(LinearLayout.HORIZONTAL);
                 l2.setOrientation(LinearLayout.HORIZONTAL);
+                l0.setOrientation(LinearLayout.HORIZONTAL);
+
                 final ImageButton menu = new ImageButton(this.getBaseContext());
                 final Button btn = new Button(this.getBaseContext());
                 final TextView txt = new TextView(this.getBaseContext());
@@ -137,8 +140,9 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
                 l1.addView(txt);
                 l2.addView(btnHide);
                 l2.addView(menu);
-                l1.addView(l2);
-                Botones.addView(l1);
+                l0.addView(l1);
+                l0.addView(l2);
+                Botones.addView(l0);
                 Botones.addView(btn);
             }
         }

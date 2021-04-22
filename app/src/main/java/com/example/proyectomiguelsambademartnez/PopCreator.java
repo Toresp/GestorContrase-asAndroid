@@ -5,9 +5,12 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -20,6 +23,9 @@ public class PopCreator extends AppCompatDialogFragment {
     private String title;
     private Boolean logIn;
     private String logInUsername;
+    private ImageButton Typebtn;
+    private Boolean hidden =true;
+
 
     PopCreator(String title, Boolean log){
         this.title = title;
@@ -48,6 +54,21 @@ public class PopCreator extends AppCompatDialogFragment {
                         }
                     });
             password = view.findViewById(R.id.editTextPass);
+            Typebtn = view.findViewById(R.id.TypeButton);
+            Typebtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(hidden){
+                        password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                        hidden = false;
+                    }
+
+                    else{
+                        password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                        hidden = true;
+                    }
+                }
+            });
         }else {
             view = inflater.inflate(R.layout.dialogcustom2, null);
             builder.setView(view)

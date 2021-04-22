@@ -5,19 +5,25 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class Pop extends AppCompatDialogFragment {
     private EditText Site;
     private EditText password;
+    private ImageButton Typebtn;
     private PopListener listener;
     private String oldpage;
     private String title;
     private String pass;
+    private Boolean hidden = true;
 
     Pop(String op, String t, String pa){
         oldpage = op;
@@ -53,8 +59,24 @@ public class Pop extends AppCompatDialogFragment {
                         listener.applyText(pass, site,oldpage);
                     }
                 });
+
         Site = view.findViewById(R.id.editTextUsername);
         password = view.findViewById(R.id.editTextPass);
+        Typebtn = view.findViewById(R.id.TypeButton);
+        Typebtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(hidden){
+                    password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                    hidden = false;
+                }
+
+                else{
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    hidden = true;
+                }
+            }
+        });
         Site.setText(oldpage);
         password.setText(pass);
         return builder.create();

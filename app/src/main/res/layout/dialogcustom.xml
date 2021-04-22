@@ -37,7 +37,7 @@
             android:inputType="textPassword" />
 
         <ImageButton
-            android:id="@+id/imageButton"
+            android:id="@+id/TypeButton"
             android:layout_width="46dp"
             android:layout_height="45dp"
             android:layout_marginTop="18dp"

@@ -13,7 +13,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".sesion_iniciada"
-            android:theme="@style/Theme.AppCompat"></activity>
+            android:theme="@style/Theme.AppCompat"
+            android:clearTaskOnLaunch="true"></activity>
         <activity android:name=".CrearUsuario"
             android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         </activity>
@@ -33,7 +34,8 @@
             android:name=".PopCreator"
             android:theme="@style/Theme.AppCompat.NoActionBar"
             tools:ignore="Instantiatable" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:clearTaskOnLaunch="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

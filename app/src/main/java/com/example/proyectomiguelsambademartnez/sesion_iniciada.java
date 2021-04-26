@@ -72,6 +72,10 @@ public class sesion_iniciada extends AppCompatActivity implements Pop.PopListene
         });
         CargarContraseñas();
     }
+    @Override
+    public void onBackPressed() {
+
+    }
 
     //Se crea un dialogo para introducir los datos al añadir una contraseña
     private void openDialog() {

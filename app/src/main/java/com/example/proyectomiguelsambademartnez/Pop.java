@@ -19,6 +19,7 @@ public class Pop extends AppCompatDialogFragment {
     private EditText Site;
     private EditText password;
     private ImageButton Typebtn;
+    private ImageButton autoGen;
     private PopListener listener;
     private String oldpage;
     private String title;
@@ -63,6 +64,8 @@ public class Pop extends AppCompatDialogFragment {
         Site = view.findViewById(R.id.editTextUsername);
         password = view.findViewById(R.id.editTextPass);
         Typebtn = view.findViewById(R.id.TypeButton);
+        autoGen = view.findViewById(R.id.autogen);
+
         Typebtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,6 +78,12 @@ public class Pop extends AppCompatDialogFragment {
                     password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                     hidden = true;
                 }
+            }
+        });
+        autoGen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                password.setText(autoGenPass.GenPass());
             }
         });
         Site.setText(oldpage);

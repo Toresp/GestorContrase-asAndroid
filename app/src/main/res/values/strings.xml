@@ -36,11 +36,12 @@
     <string name="wrong_pass">Contraseña errónea.</string>
     <string name="intro_pass">Introduzca su contraseña</string>
     <string name="edit_pass">Editar Contraseña</string>
+    <string name="finger_tittle">Inicio de sesión Biométrico</string>
+    <string name="finger_subtittle">Inicia de sesión usando tu huella dactilar</string>
     <string name="finger_auth_fail">No se pudo reconocer la huella dactilar, intentelo de nuevo.</string>
     <string name="finger_auth_done">Huella dactilar reconocida, accediendo a la aplicación...</string>
+    <string name="finger_auth_error">Error al autenticar: </string>
     <string name="del_us">Eliminar cuenta</string>
     <string name="DialogDel">Al realizar esto eliminarás la cuenta y todos sus datos. ¿Estás seguro?</string>
     <string name="VerCalendarOnline">Esta opción solo está disponible si tiene una cuenta en la nube.</string>
-
-
 </resources>

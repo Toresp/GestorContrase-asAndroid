@@ -36,9 +36,12 @@
     <string name="wrong_pass">Wrong Password</string>
     <string name="intro_pass">Enter your password</string>
     <string name="edit_pass">Edit Password</string>
+    <string name="del_us">Delete Account</string>
+    <string name="finger_tittle">Biometric login</string>
+    <string name="finger_subtittle">Log in using your biometric credential</string>
     <string name="finger_auth_fail">fingerprint was not recognized, try again.</string>
     <string name="finger_auth_done">Fingerprint recogniced, entering the aplication...</string>
-    <string name="del_us">Delete Account</string>
+    <string name="finger_auth_error">Authentication error: </string>
     <string name="DialogDel">By doing this your account will be deleted including all its data, are you sure?</string>
     <string name="VerCalendarOnline">This option is only avaliable with cloud accounts</string>
 </resources>

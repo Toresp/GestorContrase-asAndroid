@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
             //mAuth.signOut();
             if(mAuth.getCurrentUser() != null) {
                 if (!ComprobarBiometria()) {
-                    update(mAuth.getCurrentUser());
+
                 }
                 executor = ContextCompat.getMainExecutor(this);
                 biometricPrompt = new BiometricPrompt(MainActivity.this,
@@ -82,10 +82,10 @@ public class MainActivity extends AppCompatActivity {
                     public void onAuthenticationError(int errorCode,
                                                       @NonNull CharSequence errString) {
                         super.onAuthenticationError(errorCode, errString);
-                        Toast.makeText(getApplicationContext(),
-                                "Authentication error: " + errString, Toast.LENGTH_SHORT)
-                                .show();
                         mAuth.signOut();
+                        Toast.makeText(getApplicationContext(),
+                                getResources().getString(R.string.finger_auth_error)+ errString, Toast.LENGTH_SHORT)
+                                .show();
                     }
 
                     @Override
@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onAuthenticationFailed() {
                         super.onAuthenticationFailed();
-                        mAuth.signOut();
                         Toast.makeText(getApplicationContext(), getResources().getString(R.string.finger_auth_fail),
                                 Toast.LENGTH_SHORT)
                                 .show();
@@ -108,8 +107,8 @@ public class MainActivity extends AppCompatActivity {
                 });
 
                 promptInfo = new BiometricPrompt.PromptInfo.Builder()
-                        .setTitle("Biometric login for my app")
-                        .setSubtitle("Log in using your biometric credential")
+                        .setTitle(getResources().getString(R.string.finger_tittle))
+                        .setSubtitle(getResources().getString(R.string.finger_subtittle))
                         .setNegativeButtonText("Use account password")
                         .build();
                 biometricPrompt.authenticate(promptInfo);
@@ -127,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
         File file = new File(bddestino);
         Log.d("DEPURACIÓN", "Ruta archivo BD: " + bddestino);
         if (file.exists()) {
-            Toast.makeText(getApplicationContext(), getResources().getString(R.string.Existencia), Toast.LENGTH_LONG).show();
             return; // Ya existe la BD, salimos del método
         }
         String pathbd = "/data/data/" + getPackageName()

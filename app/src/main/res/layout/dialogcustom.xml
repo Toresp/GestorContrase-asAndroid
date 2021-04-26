@@ -37,6 +37,18 @@
             android:inputType="textPassword" />
 
         <ImageButton
+            android:id="@+id/autogen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="18dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+
+            app:srcCompat="@android:drawable/stat_notify_sync" />
+
+        <ImageButton
             android:id="@+id/TypeButton"
             android:layout_width="46dp"
             android:layout_height="45dp"

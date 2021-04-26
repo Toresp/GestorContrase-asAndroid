@@ -229,17 +229,14 @@ public class sesion_anonima extends AppCompatActivity implements Pop.PopListener
         switch (item.getItemId()) {
             //Se muestra en pantalla el menu de opciones.
             case R.id.options:
-
-                return true;
-            case R.id.calendar:
                 Toast.makeText(this, R.string.VerCalendarOnline, Toast.LENGTH_SHORT).show();
-                //Se lleva a la pantalla de creación de usuario y todos los datos de anonimo de sustituyen por los nuevos datos creados.
+                return true;
             case R.id.signin:
                 Intent datos = new Intent(this, CrearUsuario.class);
                 datos.putExtra(Launched, true);
                 datos.putExtra(LocalPasswords, usuario);
+                //Se lleva a la pantalla de creación de usuario y todos los datos de anonimo de sustituyen por los nuevos datos creados.
                 startActivity(datos);
-
                 return true;
             case R.id.delAcc:
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);

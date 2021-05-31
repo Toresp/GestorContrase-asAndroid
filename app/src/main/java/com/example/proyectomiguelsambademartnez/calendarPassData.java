@@ -74,7 +74,7 @@ public class calendarPassData {
             JsonObject data = new JsonObject();
             Long date = toMili(i);
             data.addProperty("date", date);
-            data.addProperty("event", "Cambiar contraseña de la pagina " + events.get(date));
+            data.addProperty("event", "Añadida la página " + events.get(date));
             Datos.add(data);
         }
         return Datos.toString();

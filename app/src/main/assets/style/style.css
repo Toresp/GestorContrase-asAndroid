@@ -124,6 +124,7 @@ html {
 }
 .todayEvent{
   background-color: #167e56;
+  cursor: pointer;
 }
 .event {
   background-color: #ab30e4;

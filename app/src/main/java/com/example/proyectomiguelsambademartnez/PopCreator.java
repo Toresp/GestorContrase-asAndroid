@@ -31,6 +31,7 @@ public class PopCreator extends AppCompatDialogFragment {
         this.title = title;
         this.logIn = log;
     }
+    //Crea dos tipos de dialogos distintos en funcion de la variable log-in para así crear un dialogo para solo introducir la contraseña e iniciar sesión o crear uno para registrar un nuevo usuario.
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -115,7 +116,6 @@ public class PopCreator extends AppCompatDialogFragment {
     public void setLogInUsername(String logInUsername) {
         this.logInUsername = logInUsername;
     }
-
 
     public interface PopCreatorListener {
         void createApplyText(String pass, String name);

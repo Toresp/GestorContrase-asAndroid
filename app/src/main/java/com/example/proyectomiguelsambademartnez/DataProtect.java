@@ -34,7 +34,7 @@ public class DataProtect {
     private final static String Fkey = "AEBP145ach@~$sAC";
     private final static String KEY_NAME = "AndroidKey";
     private static KeyStore keyStore;
-
+    //Desencripta las contraseñas la mainkey se utilizaba antes pero ahora está obsoleta desde la creación de la página web
     public static String decryptPass(String password, String mainKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
         Key secretKey = generateKey();
@@ -45,7 +45,7 @@ public class DataProtect {
         String datosDesencriptadosString = new String(datosDesencriptadosByte);
         return datosDesencriptadosString;
     }
-
+    //Encripta la contrasela usando AES y encode64
     public static String encryptPass(String password, String mainKey)
             throws NoSuchPaddingException, NoSuchAlgorithmException, BadPaddingException, IllegalBlockSizeException, InvalidKeyException, UnsupportedEncodingException
     {
@@ -56,7 +56,7 @@ public class DataProtect {
         String datosEncriptadosString = Base64.encodeToString(datosEncriptadosBytes, Base64.DEFAULT);
         return datosEncriptadosString;
     }
-
+    //Encripta en AES la key.
     private static SecretKeySpec generateKey()
             throws  UnsupportedEncodingException
     {

@@ -114,19 +114,20 @@ public class CrearUsuario extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
     }
-
+    //Lanza la actividad de inicio.
     private void Update(){
         startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
 
-
+    //Retrocede a la actividad de sesión anonima.
     private void goBack(){
         startActivity(new Intent(this, sesion_anonima.class));
         finish();
     }
 
+    //Comprueba los datos del usuario y los registra en la base de datos local una vez firebase complete el registro.
     private void ComprobarYActualizar() {
         final String[] Datos = new String[]{user.getText().toString(), pass.getText().toString(), pass2.getText().toString()};
         if (TextUtils.isEmpty(Datos[0]) || TextUtils.isEmpty(Datos[1]) || TextUtils.isEmpty(Datos[2]))

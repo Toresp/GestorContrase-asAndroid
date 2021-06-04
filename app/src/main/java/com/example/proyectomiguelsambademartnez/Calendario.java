@@ -21,6 +21,7 @@ public class Calendario extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.Q)
     @SuppressLint("JavascriptInterface")
     protected void onCreate(Bundle savedInstanceState) {
+        //Implementación del calendario hecho con html,css y js.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.calendario);
         contrasenhas = ((UserData) getIntent().getSerializableExtra(sesion_iniciada.DATOS)).getContraseñas();

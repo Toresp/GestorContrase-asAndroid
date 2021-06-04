@@ -184,7 +184,7 @@ public class DataBaseConexion {
             return false;
         return true;
     }
-
+    //Edita los datos del usuario de manera local dependiendo de si es un usuario de firebase o no.
     public Boolean editDatos(UserData us, String oldpage, PassData data,Boolean local){
         int result;
         String consulta;
@@ -210,7 +210,7 @@ public class DataBaseConexion {
             db.close();
             return result!=-1;
     }
-
+    //Elimina los datos seleccionados del usuario dependiendo de si es un usuario de firebase o no.
     public Boolean DelDatos(String id, String page, Boolean local) {
         int num;
         String whereClause;
@@ -227,7 +227,7 @@ public class DataBaseConexion {
             return num!=-1;
     }
 
-
+    //Recoge los datos del usuario local.
     public List getLocalUser(){
         List<User> Datos = new ArrayList<>();
         String consulta = "SELECT username,password FROM AUSER";
@@ -246,7 +246,7 @@ public class DataBaseConexion {
         }
         return Datos;
     }
-
+    //Autentifica al usuario local que el usuario local exista y sus datos sean correctos.
     public Boolean AuthLocalUser(String username, String contraseña) {
         String consulta = "SELECT * FROM AUSER WHERE username=? AND password=?";
         try {
@@ -263,7 +263,7 @@ public class DataBaseConexion {
         }
         return false;
     }
-
+    //Elimina el usuario local pòr cvompleto.
     public Boolean DeleteLocalUser(String username){
         String consulta = "SELECT * FROM AUSER WHERE username=?";
         try {

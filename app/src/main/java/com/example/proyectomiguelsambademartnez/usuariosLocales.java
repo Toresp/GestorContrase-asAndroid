@@ -43,7 +43,7 @@ public class usuariosLocales extends AppCompatActivity implements PopCreator.Pop
         cargarUsuarios();
 
     }
-
+    //Carga todos los usuarios locales registrados en la aplicaión.
     private void cargarUsuarios(){
         if(Users.size()>0){
             Usuarios.removeAllViews();
@@ -75,7 +75,7 @@ public class usuariosLocales extends AppCompatActivity implements PopCreator.Pop
         DialogPop.show(getSupportFragmentManager(), "Introduzca su contraseña");
     }
 
-
+    //Crea el dialogo de registro
     @Override
     public void createApplyText(String pass, String user) {
         if(!bd.ExistUser(user)){
@@ -91,7 +91,7 @@ public class usuariosLocales extends AppCompatActivity implements PopCreator.Pop
 
 
     }
-
+    //Crea el dilogo log in.
     @Override
     public void logApplyText(String password,String username) {
         try {

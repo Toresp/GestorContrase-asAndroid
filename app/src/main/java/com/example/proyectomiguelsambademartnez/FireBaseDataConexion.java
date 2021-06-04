@@ -39,6 +39,7 @@ public class FireBaseDataConexion {
         myRef = database.getReference();
         myRef.child(id).child("ultima_conexion").setValue(LocalDateTime.now().toString());
     }
+    //Abre la funcion data change que está a la espera de que cambie un valor de la nube para recoger todos los datos del usuario.
     public void SyncFire(final String id, final DataBaseConexion bd){
 
         myRef = database.getReference(id+"/contraseñas");

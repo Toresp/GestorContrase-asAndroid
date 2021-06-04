@@ -66,6 +66,7 @@ public class calendarPassData {
         LocalDateTime D = DD.atStartOfDay();
         return D.atOffset(ZoneOffset.UTC).toInstant().toEpochMilli();
     }
+    //Esta es la interfaz que comunica los datos con el calendario.
     @RequiresApi(api = Build.VERSION_CODES.O)
     @JavascriptInterface
     public String data() {

@@ -104,7 +104,7 @@ public class Pop extends AppCompatDialogFragment {
         }
 
     }
-
+//Intefaz que comunica los datos de la actividad principal con el dialogo
     public interface PopListener {
         void applyText(String pass, String site, String oldSite);
     }

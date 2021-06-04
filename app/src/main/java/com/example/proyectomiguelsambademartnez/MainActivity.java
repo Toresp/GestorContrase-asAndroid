@@ -152,6 +152,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+    //Botton de inicio de sesion
     private void pulsarBoton() {
         Button btnLogin = (Button) findViewById(R.id.Login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -163,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Boton de registro
     private void pulsarTexto(){
         TextView CreateUser = (TextView) findViewById(R.id.crearUsuario);
         CreateUser.setOnClickListener(new View.OnClickListener() {
@@ -190,12 +192,12 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
+                            // Inicio de sesión correcto y se cargan los datos del usuario
                             Log.d("DEPURACION", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             update(user);
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // Si falla envía un mensaje de error
                             Log.w("DEPURACION", "signInWithEmail:failure", task.getException());
                             Toast.makeText(MainActivity.this, getResources().getString(R.string.auth),
                                     Toast.LENGTH_SHORT).show();
